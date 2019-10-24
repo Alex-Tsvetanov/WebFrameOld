@@ -1,4 +1,3 @@
-main
-server
+bin/
 .vscode/settings.json
 server.c
