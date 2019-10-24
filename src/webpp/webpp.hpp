@@ -1,19 +1,22 @@
 #pragma once 
 
 #ifdef _WIN32
+	#define _WIN32_WINNT 0x0501
 	#define WIN32_LEAN_AND_MEAN
 	#define REFIID int
 	#include <winsock2.h>
 	#include <windows.h>
 	#define SO_REUSEPORT SO_BROADCAST
 	using socklen_t = int;
-	#include <mingw.thread.h>
+	#include <thread>
+	#define mingw_stdthread std
 	#include <ghc/filesystem.hpp>
 #else
 	#include <sys/socket.h> 
 	#include <netinet/in.h> 
 	#include <filesystem>
 	#include <thread>
+	#define mingw_stdthread std
 	#define ghc std
 #endif
 
