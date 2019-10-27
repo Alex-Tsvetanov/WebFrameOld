@@ -18,10 +18,14 @@
                 "UNICODE",
                 "_UNICODE"
             ],
-            "compilerPath": "C:\\MinGW\\bin\\g++.exe",
+            "compilerPath": "C:\\MinGW\\MinGW\\bin\\g++.exe",
             "cStandard": "c11",
             "cppStandard": "c++17",
-            "intelliSenseMode": "clang-x64"
+            "intelliSenseMode": "gcc-x64",
+            "compilerArgs": [
+                "-std=c++17",
+                "-O2"
+            ]
         }
     ],
     "version": 4

@@ -345,6 +345,15 @@ TEST_CASE("fs::detail::toUtf8", "[filesystem][fs.detail.utf8]")
 }
 #endif
 
+TEST_CASE("30.10.8.1 path::preferred_separator", "[filesystem][path][fs.path.generic]")
+{
+#ifdef GHC_OS_WINDOWS
+    CHECK(fs::path::preferred_separator == '\\');
+#else
+    CHECK(fs::path::preferred_separator == '/');
+#endif
+}
+
 #ifndef GHC_OS_WINDOWS
 TEST_CASE("30.10.8.1 path(\"//host\").has_root_name()", "[filesystem][path][fs.path.generic]")
 {
@@ -1553,6 +1562,10 @@ TEST_CASE("30.10.15.3 copy", "[filesystem][operations][fs.op.copy]")
         CHECK(fs::exists("dir4/file1"));
         CHECK(fs::exists("dir4/file2"));
         CHECK(fs::exists("dir4/dir2/file3"));
+        fs::create_directory("dir5");
+        generateFile("dir5/file1");
+        CHECK_THROWS_AS(fs::copy("dir1/file1", "dir5/file1"), fs::filesystem_error);
+        CHECK_NOTHROW(fs::copy("dir1/file1", "dir5/file1", fs::copy_options::skip_existing));
     }
     if (is_symlink_creation_supported()) {
         TemporaryDirectory t(TempOpt::change_path);
@@ -2596,6 +2609,19 @@ TEST_CASE("30.10.15.39 weakly_canonical", "[filesystem][operations][fs.op.weakly
         CHECK(fs::weakly_canonical(rel / "d1/../f1") == dir / "f1");
         CHECK(fs::weakly_canonical(rel / "d1/../f1/../f2") == dir / "f2");
     }
+}
+
+TEST_CASE("std::string_view support", "[filesystem][fs.string_view]")
+{
+#if __cpp_lib_string_view
+    std::string p("foo/bar");
+    std::string_view sv(p);
+    CHECK(fs::path(sv, fs::path::format::generic_format).generic_string() == "foo/bar");
+    fs::path p2("fo");
+    p2 += std::string_view("o");
+    CHECK(p2 == "foo");
+    CHECK(p2.compare(std::string_view("foo")) == 0);
+#endif
 }
 
 #ifdef GHC_OS_WINDOWS

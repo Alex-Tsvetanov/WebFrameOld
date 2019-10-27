@@ -3,21 +3,32 @@
 #ifdef _WIN32
 	#define _WIN32_WINNT 0x0501
 	#define WIN32_LEAN_AND_MEAN
-	#define REFIID int
 	#include <winsock2.h>
+	#include <winsock.h>
 	#include <windows.h>
 	#define SO_REUSEPORT SO_BROADCAST
 	using socklen_t = int;
 	#include <thread>
 	#define mingw_stdthread std
-	#include <ghc/filesystem.hpp>
 #else
 	#include <sys/socket.h> 
 	#include <netinet/in.h> 
 	#include <filesystem>
 	#include <thread>
-	#define mingw_stdthread std
-	#define ghc std
+#endif
+
+/*
+#if defined(__cplusplus) && __cplusplus >= 201703L && defined(__has_include)
+	#if __has_include(<filesystem>)
+		#define GHC_USE_STD_FS
+		#include <filesystem>
+		namespace fs = std::filesystem;
+	#endif
+#endif
+*/
+#ifndef GHC_USE_STD_FS
+	#include <ghc/filesystem.hpp>
+	namespace fs = ghc::filesystem;
 #endif
 
 #include <webpp/base.hpp>
@@ -90,7 +101,7 @@ namespace webpp
 							std::regex >,                              // regex 
 				respond_manager,
 				cmp> routes;
-			std::set < ghc::filesystem::path > static_folders;
+			std::set < fs::path > static_folders;
 
 			static std::pair < std::vector < std::pair < std::string, std::string > >, // var name var type
 							std::regex >                // regex 
@@ -141,7 +152,7 @@ namespace webpp
 
 			webpp& set_static (std::string path)
 			{
-				ghc::filesystem::path p = ghc::filesystem::relative (path);
+				fs::path p = fs::relative (path);
 				static_folders.insert (p);
 				return *this;
 			}
@@ -234,45 +245,99 @@ namespace webpp
 
 			void run (unsigned short PORT, const unsigned char threads)
 			{
-				int server_fd, valread; 
+				#ifdef __WIN32__
+					WSADATA wsa;
+					
+					printf("\nInitialising Winsock...");
+					if (WSAStartup(MAKEWORD(2,2),&wsa) != 0)
+					{
+						printf("Failed. Error Code : %d",WSAGetLastError());
+						exit(1);
+					}
+					
+					printf("Initialised.");
+				#endif
+				int server_fd, valread;
 				struct sockaddr_in address; 
 				char opt = 1; 
 				int addrlen = sizeof(address); 
 				   
 				// Creating socket file descriptor 
-				if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) 
-				{ 
-					perror("socket failed"); 
-					throw std::ios_base::failure ("Socket failed"); 
-				} 
+				#ifdef __WIN32__
+					if((server_fd = socket(AF_INET , SOCK_STREAM , 0 )) == INVALID_SOCKET)
+					{
+						printf("Could not create socket : %d" , WSAGetLastError());
+						throw std::ios_base::failure ("Socket failed"); 
+					}
+				#else
+					if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) 
+					{ 
+						perror("socket failed"); 
+						throw std::ios_base::failure ("Socket failed"); 
+					} 
+				#endif
+				printf("socket done\n"); 
 				
-				// Forcefully attaching socket to the port 
-				if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, 
-															  &opt, sizeof(opt))) 
-				{ 
-					perror("setsockopt"); 
-					throw std::ios_base::failure ("Setsockopt"); 
-				} 
-				address.sin_family = AF_INET; 
-				address.sin_addr.s_addr = INADDR_ANY; 
-				address.sin_port = htons (PORT); 
-				   
-				// Forcefully attaching socket to the port 8080 
-				if (bind(server_fd, (struct sockaddr *)&address,  
-											 sizeof(address))<0) 
-				{ 
-					perror("bind failed"); 
-					throw std::ios_base::failure ("Socket failed"); 
-				} 
-				if (listen(server_fd, SOMAXCONN) < 0) 
-				{ 
-					perror("listen"); 
-					throw std::ios_base::failure ("Listen"); 
-				} 
+				#ifndef __WIN32__
+					// Forcefully attaching socket to the port
+					if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, 
+																&opt, sizeof(opt))) 
+					{ 
+					printf("setsockopt failed %d\n", server_fd); 
+						perror("setsockopt"); 
+						throw std::ios_base::failure ("Setsockopt"); 
+					} 
+
+					printf("setsockopt done %d\n", (int)opt); 
+					address.sin_family = AF_INET; 
+					address.sin_addr.s_addr = INADDR_ANY; 
+					address.sin_port = htons (PORT); 
+					
+					// Forcefully attaching socket to the port 8080 
+					if (bind(server_fd, (struct sockaddr *)&address,  
+												sizeof(address))<0) 
+					{ 
+						perror("bind failed"); 
+						throw std::ios_base::failure ("Socket failed"); 
+					} 
+
+					printf("bind done\n"); 
+					if (listen(server_fd, SOMAXCONN) < 0) 
+					{ 
+						perror("listen"); 
+						throw std::ios_base::failure ("Listen"); 
+					}
+				#else
+					address.sin_addr.s_addr = INADDR_ANY;
+					address.sin_family = AF_INET;
+					address.sin_port = htons (PORT); 
+					if (bind(server_fd, (struct sockaddr *)&address,  
+												sizeof(address))<0)
+					{
+						fprintf(stderr, "Server: bind() failed with error %d\n", WSAGetLastError());
+						WSACleanup();
+						exit(-1);
+					}
+					else
+						printf("Server: bind() is OK.\n");
+
+					printf("bind done\n"); 
+					if (listen(server_fd, SOMAXCONN) < 0) 
+					{ 
+						perror("listen"); 
+						throw std::ios_base::failure ("Listen"); 
+					}
+				#endif
+
+				printf("Listening\n"); 
 
 				auto accept_req = [&] (int new_socket, size_t id) {
 					char buffer[8196] = {0}; 
+					#ifndef __WIN32__
 					valread = read (new_socket, buffer, 8196); 
+					#else
+					valread = recv (new_socket, buffer, 8196, 0); 
+					#endif
 					printf("Accept:\n%s\n--------- BUFFER ------------\n", buffer); 
 
 					if (strlen (buffer) == 0)
