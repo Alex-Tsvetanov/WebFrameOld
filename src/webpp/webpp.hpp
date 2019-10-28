@@ -41,6 +41,7 @@
 #include <chrono>
 
 #include <ios>
+#include <iostream>
 
 #include <unistd.h> 
 #include <stdio.h> 
@@ -148,13 +149,32 @@ namespace webpp
 				return {v, std::regex (format)};
 			}
 
+			std::ostream* logger;
+			std::ostream* errors;
 		public:
+
+			webpp& set_logger (std::ostream& _logger = std::clog)
+			{
+				logger = &_logger;
+				return *this;
+			}
+
+			webpp& set_error_logger (std::ostream& _logger = std::clog)
+			{
+				errors = &_logger;
+				return *this;
+			}
 
 			webpp& set_static (std::string path)
 			{
 				fs::path p = fs::relative (path);
 				static_folders.insert (p);
 				return *this;
+			}
+
+			static response get_file(std::string path)
+			{
+				return response (status_line ("200"), {{"Content-Type", "text/html; charset=utf-8"}}, path);
 			}
 
 			webpp& route (std::string path, respond_manager res)
@@ -189,33 +209,25 @@ namespace webpp
 			
 			response respond (const request& req) const
 			{
-				std::cout << "Requested: " << req.uri << std::endl;
+				(*this->logger) << "Requested: " << req.uri << std::endl;
 				std::smatch pieces_match;
-				//std::cout << "Routes: " << routes.size() << std::endl;
 				for (const auto &s : routes)
 				{
 					std::regex pieces_regex(s.first.second);
-					//for (auto& x : s.first.first)
-					//	std::cout << x.first << " " << x.second << std::endl;
 					if (std::regex_match (req.uri, pieces_match, pieces_regex)) {
 						std::ssub_match sub_match = pieces_match[0];
 						std::string piece = sub_match.str();
-						//std::cout << piece << " " << req.uri << std::endl;
 						if (piece == req.uri)
 						{
 							path_vars params;
 							for (size_t i = 1; i < pieces_match.size(); ++i) {
 								sub_match = pieces_match[i];
 								piece = sub_match.str();
-								//std::cout << "[" << s.first.first[i - 1].first << "] = (" << piece << ", " << s.first.first[i - 1].second << ")" << std::endl;
 								params [s.first.first[i - 1].first] = path_vars::var(piece, s.first.first[i - 1].second);
 							}
 							return s.second.call (params); 
 						}
 					}
-					//else
-						//std::cout << "Did not match." << std::endl;
-					//std::cout << "--------------------------------" << std::endl;
 				}
 				return response (status_line ("1.1", "404"));
 			}
@@ -223,7 +235,7 @@ namespace webpp
 			response respond (const char* p) const
 			{
 				std::string path (p);
-				std::cout << "Requested: " << path << std::endl;
+				(*this->logger) << "Requested: " << path << std::endl;
 				std::smatch pieces_match;
 
 				for (const auto &s : routes)
@@ -248,14 +260,14 @@ namespace webpp
 				#ifdef __WIN32__
 					WSADATA wsa;
 					
-					printf("\nInitialising Winsock...");
+					(*this->logger) << "Initialising Winsock..." << std::endl;
 					if (WSAStartup(MAKEWORD(2,2),&wsa) != 0)
 					{
-						printf("Failed. Error Code : %d",WSAGetLastError());
+						(*this->errors) << "Failed. Error Code: " << WSAGetLastError() << std::endl;
 						exit(1);
 					}
 					
-					printf("Initialised.");
+					(*this->logger) << "Initialised." << std::endl;
 				#endif
 				int server_fd, valread;
 				struct sockaddr_in address; 
@@ -266,24 +278,24 @@ namespace webpp
 				#ifdef __WIN32__
 					if((server_fd = socket(AF_INET , SOCK_STREAM , 0 )) == INVALID_SOCKET)
 					{
-						printf("Could not create socket : %d" , WSAGetLastError());
+						(*this->errors) << "Could not create socket: " << WSAGetLastError() << std::endl;
 						throw std::ios_base::failure ("Socket failed"); 
 					}
 				#else
 					if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) 
 					{ 
-						perror("socket failed"); 
+						(*this->errors) << "socket failed" << std::endl; 
 						throw std::ios_base::failure ("Socket failed"); 
 					} 
 				#endif
-				printf("socket done\n"); 
+				(*this->errors) << "socket done" << std::endl; 
 				
 				#ifndef __WIN32__
 					// Forcefully attaching socket to the port
 					if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, 
 																&opt, sizeof(opt))) 
 					{ 
-					printf("setsockopt failed %d\n", server_fd); 
+						printf("setsockopt failed %d\n", server_fd); 
 						perror("setsockopt"); 
 						throw std::ios_base::failure ("Setsockopt"); 
 					} 
@@ -338,24 +350,26 @@ namespace webpp
 					#else
 					valread = recv (new_socket, buffer, 8196, 0); 
 					#endif
-					printf("Accept:\n%s\n--------- BUFFER ------------\n", buffer); 
+					(*this->logger) << "Accepted data:\n" << buffer << "\n--------- END-OF-DATA ------------" << std::endl; 
 
 					if (strlen (buffer) == 0)
 					{
-						std::cout << "================= FACK YOU ===============" << std::endl;
+						(*this->logger) << "================= EMPTY-BUFFER ===============" << std::endl;
 						this->busy [id] = false;
 						return ;
 					}
 
 					response res;
 					request r (buffer);
+					(*this->logger) << "================= PARSING-BUFFER ===============" << std::endl;
 					std::cout << r.to_string () << std::endl;
-					printf("--------- REQUEST ------------\n"); 
+					printf("--------- PARSED ------------\n"); 
 
+					(*this->logger) << "=================  RESPONDING  ================" << std::endl;
 					res = this->respond (r);
 					res.set_http (r.http);
 					std::cout << res.to_string () << std::endl;
-					printf("--------- REQUEST ------------\n"); 
+					(*this->logger) << "--------- RESPONDED ------------" << std::endl; 
 					char* msg = new char [res.to_string ().size () + 1];
 					std::string s = res.to_string ();
 					for (size_t i = 0 ; i < s.size () ; i ++)
@@ -363,10 +377,10 @@ namespace webpp
 						msg [i] = s [i];
 					}
 					msg [s.size ()] = '\0';
-					std::cout << msg << std::endl;
-					printf("--------- REQUEST ------------\n"); 
+					// std::cout << msg << std::endl;
+					(*this->logger) << "--------- SENDING ------------" << std::endl; 
 					send (new_socket, s.c_str (), s.size (), 0); 
-					printf("Message sent\n"); 
+					(*this->logger) << "---------   SENT  ------------" << std::endl; 
 					shutdown (new_socket, 2);
 					//close (new_socket);
 					this->busy [id] = false;
@@ -388,15 +402,15 @@ namespace webpp
 						perror("accept"); 
 						throw std::ios_base::failure ("Accept"); 
 					} 
-					std::cout << "Received request on " << new_socket << std::endl;
+					// std::cout << "Received request on " << new_socket << std::endl;
 					for (size_t i = 0 ; i < threads ; i ++)
 						if (threads_ptr [i] == nullptr)
 						{
-							std::cout << "Create a thread... " << std::endl;
+							// std::cout << "Create a thread... " << std::endl;
 							threads_ptr [i] = new mingw_stdthread::thread (accept_req, new_socket, i);
-							std::cout << "Mark as busy core... " << std::endl;
+							// std::cout << "Mark as busy core... " << std::endl;
 							busy [i] = true;
-							std::cout << "Mark as busy core... " << std::endl;
+							// std::cout << "Mark as busy core... " << std::endl;
 							threads_ptr [i]->detach ();
 						}
 						else if (busy [i] == false)

@@ -5,7 +5,11 @@
 int main ()
 {
 	webpp::webpp app;
-	app.set_static ("/static")
+	app.set_logger (std::cout)
+	   .set_error_logger (std::cout)
+	   .route ("/static/{path:.*}", [](webpp::path_vars v) { // static setup
+			return webpp::webpp::get_file(v["path"]);
+	   })
 	   //EXTENDED_VERSION: .route ("/", webpp::respond_manager ().set ([]() {
 	   //EXTENDED_VERSION:  	std::cout << "hello world\r\n" << std::endl;		
 	   //EXTENDED_VERSION:  	return webpp::response (webpp::status_line ("200", "1.1"), {}, "<h1>I love you! I'm working</h1>");
