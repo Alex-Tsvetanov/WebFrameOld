@@ -6,9 +6,9 @@
         {
             "label": "Run server",
             "type": "shell",
-            "command": "g++.exe ./src/main.cpp -o ./bin/main.exe -I./src -I./lib/win/mingw-std-threads-master -I./lib/win/filesystem-master/include/ -Wall -Wno-long-long -pedantic -lwsock32 -lws2_32 --std=c++17 -lws2_32 -fconcepts",
+            "command": "g++.exe ./src/main.cpp -o ./bin/main.exe -I./lib/win/curl-curl-7_66_0/inlude -I./src -I./lib/win/mingw-std-threads-master -I./lib/win/filesystem-master/include/ -Wall -Wno-long-long -pedantic -lwsock32 -lws2_32 --std=c++17 -lws2_32 -fconcepts",
             "windows": {
-                "command": "g++.exe ./src/main.cpp -o ./bin/main.exe -I./src -I./lib/win/mingw-std-threads-master -I./lib/win/filesystem-master/include/ -Wall -Wno-long-long -pedantic -lwsock32 -lws2_32 --std=c++17 -lws2_32 -fconcepts"
+                "command": "g++.exe ./src/main.cpp -o ./bin/main.exe -I./lib/win/curl-curl-7_66_0/inlude  -I./src -I./lib/win/mingw-std-threads-master -I./lib/win/filesystem-master/include/ -Wall -Wno-long-long -pedantic -lwsock32 -lws2_32 --std=c++17 -lws2_32 -fconcepts"
             },
             "group": {
                 "kind": "build",
@@ -17,7 +17,25 @@
             "presentation": {
                 "reveal": "always",
                 "panel": "new"
-            }
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Run tests",
+            "type": "shell",
+            "command": "g++.exe ./tests/test.cpp -o ./bin/test.exe -I./lib/win/curl-curl-7_66_0/inlude -I./src -I. -I./lib/win/mingw-std-threads-master -I./lib/win/filesystem-master/include/ -Wall -Wno-long-long -pedantic -lwsock32 -lws2_32 --std=c++17 -lws2_32 -fconcepts",
+            "windows": {
+                "command": "g++.exe ./tests/test.cpp -o ./bin/test.exe -I./lib/win/curl-curl-7_66_0/inlude -I./src -I. -I./lib/win/mingw-std-threads-master -I./lib/win/filesystem-master/include/ -Wall -Wno-long-long -pedantic -lwsock32 -lws2_32 --std=c++17 -lws2_32 -fconcepts"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
         }
     ]
 }

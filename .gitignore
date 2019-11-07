@@ -1,3 +1,4 @@
-bin/
+bin/main.exe
+bin/test.exe
 .vscode/settings.json
-server.c
+buffer.txt

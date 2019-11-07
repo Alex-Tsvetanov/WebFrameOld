@@ -1,3 +1,9 @@
 [submodule "moka"]
 	path = moka
 	url = https://github.com/xavierholt/moka
+[submodule "lib/win/cpr"]
+	path = lib/win/cpr
+	url = http://github.com/whoshuu/cpr.git
+[submodule "cpr"]
+	path = cpr
+	url = https://github.com/whoshuu/cpr.git

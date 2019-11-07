@@ -1,64 +1,22 @@
-#include <webpp/webpp.hpp>
+#include <webnetpp/webnetpp.hpp>
 #include <iostream>
 #include <sstream>
+#include <stdlib.h>
 
 int main ()
 {
-	webpp::webpp app;
+	int pass = 0;
+	webnetpp::webnetpp app;
 	app.set_logger (std::cout)
 	   .set_error_logger (std::cout)
-	   .route ("/static/{path:.*}", [](webpp::path_vars v) { // static setup
-			return webpp::webpp::get_file(v["path"]);
-	   })
-	   //EXTENDED_VERSION: .route ("/", webpp::respond_manager ().set ([]() {
-	   //EXTENDED_VERSION:  	std::cout << "hello world\r\n" << std::endl;		
-	   //EXTENDED_VERSION:  	return webpp::response (webpp::status_line ("200", "1.1"), {}, "<h1>I love you! I'm working</h1>");
-	   //EXTENDED_VERSION: }))
-	   //EXTENDED_VERSION: .route ("/users/{user:[a-zA-Z0-9]*}", webpp::respond_manager ().set ([](webpp::path_vars v) {
-	   //EXTENDED_VERSION:  	for (auto& x : v)
-	   //EXTENDED_VERSION:  		std::cout << x.first << " " << x.second << std::endl; 
-	   //EXTENDED_VERSION:  	return webpp::response ();
-	   //EXTENDED_VERSION: }))
-	   //EXTENDED_VERSION: .route ("/contest/{id#int:[0-9]*}", webpp::respond_manager ().set ([](webpp::path_vars v) {
-	   //EXTENDED_VERSION:  	for (auto& x : v.vars)
-	   //EXTENDED_VERSION:  		std::cout << x.first << " " << x.second.value << " " << x.second.type << std::endl; 
-	   //EXTENDED_VERSION: 	int id = v["id"];
-	   //EXTENDED_VERSION: 	std::string s (v["id"]);
-	   //EXTENDED_VERSION: 	std::cout << "int = " << id << " string = " << s << std::endl;
-	   //EXTENDED_VERSION:  	return webpp::response ();
-	   //EXTENDED_VERSION: }))
-	   //EXTENDED_VERSION: .route ("/users/{user:[a-zA-Z0-9]*}/{tab:.*}", webpp::respond_manager ().set ([](webpp::path_vars v) {
-	   //EXTENDED_VERSION:  	for (auto& x : v)
-	   //EXTENDED_VERSION:  		std::cout << x.first << " " << x.second << std::endl; 
-	   //EXTENDED_VERSION:  	return webpp::response ();
-	   //EXTENDED_VERSION: }))
-	   .route ("/", []() {
-	     	return webpp::response (webpp::status_line ("200"), {{"Content-Type", "text/html; charset=utf-8"}}, "<h1>I love you! I'm working</h1>");
-	   })
-	   .route ("/users/{user:[a-zA-Z0-9]*}", [](webpp::path_vars v) {
-			std::stringstream ss;
-			for (auto& x : v.vars)
-				ss << x.first << " " << x.second.value << " " << x.second.type << "<br>"; 
-	     	return webpp::response (webpp::status_line ("200"), {{"Content-Type", "text/html; charset=utf-8"}}, "<h1>" + ss.str () + "</h1>");
-	   })
-	   .route ("/contest/{id#int:[0-9]*}", [](webpp::path_vars v) {
-	    	for (auto& x : v.vars) {
-				std::cout << x.first << " " << x.second.value << " " << x.second.type << std::endl; 
+	   .set_performancer (std::cout)
+	   .route ("/{steps#int:[0-9]*}", [&pass](webnetpp::path_vars v) {
+		   	int steps = v["steps"];
+		   	for (int i = 0 ; i < (1 << steps); i ++)
+			{
+				pass += rand();
 			}
-			int id = v["id"];
-			std::string s (v["id"]);
-			std::cout << "int = " << id << " string = " << s << std::endl;
-	    	return webpp::response ();
-	   })
-	   //SIMPLIFIED_VERSION: .route ("/contest/{id#int}", [](webpp::path_vars v) {
-	   //SIMPLIFIED_VERSION:  	for (auto& x : v.vars)
-	   //SIMPLIFIED_VERSION:  		std::cout << x.first << " " << x.second.value << " " << x.second.type << std::endl; 
-	   //SIMPLIFIED_VERSION:  	return webpp::response ();
-	   //SIMPLIFIED_VERSION: })
-	   .route ("/users/{user:[a-zA-Z0-9]*}/{tab:.*}", [](webpp::path_vars v) {
-			for (auto& x : v.vars)
-				std::cout << x.first << " " << x.second.value << " " << x.second.type << std::endl; 
-			return webpp::response ();
+	     	return webnetpp::response (webnetpp::status_line ("200"), {{"Content-Type", "text/html; charset=utf-8"}}, "Hello World!");
 	   })
 	;
 
@@ -66,4 +24,5 @@ int main ()
 	const unsigned char cores = ((std::thread::hardware_concurrency () - 1 > 0) ? (std::thread::hardware_concurrency () - 1) : 1);
 	std::cout << "Listening on :" << port << " with " << (int)cores << " cores" << std::endl;
 	app.run (port, cores);
+	std::cout << "maika ti";
 }
