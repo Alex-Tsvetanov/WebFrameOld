@@ -7,11 +7,7 @@
 int main ()
 {
 	webnetpp::webnetpp app;
-	app.set_logger (std::cout)
-	   .set_error_logger (std::cout)
-	   .set_performancer (std::cout)
-	   .route ("/", []() {
-						std::cout << "Here" << std::endl;
+	app.route ("/", []() {
 						return "Hello, World!";
 					}
 		)

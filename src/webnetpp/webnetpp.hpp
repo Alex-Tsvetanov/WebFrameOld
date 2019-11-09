@@ -116,6 +116,13 @@ namespace webnetpp
 			SynchronizedFile performancer;
 		public:
 
+			webnetpp ()
+			{
+				performancer = SynchronizedFile(std::clog);
+				logger = SynchronizedFile(std::clog);
+				errors = SynchronizedFile(std::cout);
+			}
+
 			auto get_routes () const 
 			{
 				return this->routes;
@@ -209,7 +216,7 @@ namespace webnetpp
 				return respond (std::string(p));
 			}
 
-			void run (unsigned short PORT, unsigned int threads, unsigned requests = -1)
+			bool run (unsigned short PORT, unsigned int threads, unsigned requests = -1)
 			{
 				#ifdef __WIN32__
 					WSADATA wsa;
@@ -381,7 +388,7 @@ namespace webnetpp
 						while (busy [i]) {	}
 					}
 				}
-				return;
+				return true;
 			}
 
 		private:
