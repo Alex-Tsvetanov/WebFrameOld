@@ -4,7 +4,9 @@
 #include <string>
 #include <iostream>
 #include <regex>
+#include <any>
 #include <stdexcept>
+#include <utility>
 
 namespace webnetpp
 {
@@ -27,7 +29,8 @@ namespace webnetpp
 					this->type = type;
 					this->value = value;
 				}
-				operator int ()
+
+				operator int () const
 				{
 					if (value.size () == 0)
 						throw std::invalid_argument("path_vars::var::value is empty.");
@@ -41,46 +44,41 @@ namespace webnetpp
 							throw std::invalid_argument("path_vars::var::value is not matching path_vars::var::type (not integer)"); 
 					return ans;
 				}
-				operator unsigned ()
-				{
-					if (value.size () == 0)
-						throw std::invalid_argument("path_vars::var::value is empty.");
-					unsigned long long ans = 0;
-					if (value[0] == '-')
-						throw std::invalid_argument("path_vars::var::value is not matching path_vars::var::type (is signed)"); 
-					for (auto& x : value)
-						if (x >= '0' and x <= '9')
-							ans = ans * 10 + x - '0';
-						else
-							throw std::invalid_argument("path_vars::var::value is not matching path_vars::var::type"); 
-					return ans;
-				}
-				operator const char* ()
+				operator const char* () const
 				{
 					if (value.size () == 0)
 						throw std::invalid_argument("path_vars::var::value is empty.");
 					return value.c_str();
 				}
-				operator std::string ()
+				operator char () const
+				{
+					if (value.size () == 0)
+						throw std::invalid_argument("path_vars::var::value is empty.");
+					if (value.size () != 1)
+						throw std::invalid_argument("path_vars::var::value is too long.");
+					return value[0];
+				}
+				operator std::string () const
 				{
 					if (value.size () == 0)
 						throw std::invalid_argument("path_vars::var::value is empty.");
 					return value;
 				}
+				template<typename T>
+    			explicit operator T&() const { 
+					T* ans = new T(value);
+					return *ans;
+				}
 			};
 			path_vars () {}
-			path_vars (const std::map < std::string, std::string >& req_params)
+			std::vector < var > vars;
+			const var operator[] (long long unsigned int ind) const
 			{
-				for (const auto& x : req_params)
-				{
-					int f = x.second.find (':');
-					vars[x.first] = var (x.second.substr(0, f), x.second.substr(f + 1));
-				}
+				return vars[ind];
 			}
-			std::map < std::string, var > vars;
-			var& operator[] (const std::string& name)
+			void operator += (const var& v)
 			{
-				return vars [name];
+				vars.push_back (v);
 			}
 	};
  
@@ -135,6 +133,10 @@ namespace webnetpp
 			std::map < std::string, std::string > header;
 			std::string body;
 		public:
+			response (std::string html): 
+				response(status_line ("1.1", "200"), {{"Content-type", "text/html"}}, html)
+			{
+			}
 			response (status_line s = status_line ("1.1", "204"), std::map < std::string, std::string > m = {}, std::string _body = "") : status (s), header (m), body (_body)
 			{}
 

@@ -32,6 +32,7 @@
 	namespace fs = ghc::filesystem;
 #endif
 
+#include <type_traits>
 #include <iomanip>
 #include <webnetpp/base.hpp>
 #include <map>
@@ -51,88 +52,48 @@
 #include <string.h> 
 
 #include <webnetpp/file.hpp>
+#include <webnetpp/lambda2function.hpp>
 
 namespace webnetpp
 {
 	class webnetpp;
 
-	struct respond_manager
-	{
-		public:
-			respond_manager ()
-			{
-			}
-		private:
-			//webnetpp::Function::callable f;
-			std::function <response (path_vars)> f;
-		public:
-			respond_manager (std::function <response (path_vars)> l)
-			{
-				set (l);
-			}
-			
-			respond_manager (std::function <response ()> l)
-			{
-				set (l);
-			}
-
-			respond_manager& set (std::function <response (path_vars)> l)
-			{
-				this->f = l;
-				return *this;
-			}
-
-			respond_manager& set (std::function <response ()> l)
-			{
-				this->f = [l](__attribute__((unused)) path_vars _) -> response { return l (); };
-				return *this;
-			}
-
-			response call (const path_vars& vars) const
-			{
-				return f (vars);
-			}
-		private:
-			friend class webnetpp;
-	};
+	#include <webnetpp/respond_manager.hpp>
 
 	class webnetpp
 	{
 		private:
 			struct cmp { bool operator () (const auto& a, const auto& b) const { return (&a) < (&b); }};
 			std::map < 
-				std::pair < std::vector < std::pair < std::string,     // var name
-				                                      std::string > >, // var type
+				std::pair < std::vector < std::string >,               // var type
 							std::regex >,                              // regex 
-				respond_manager,
+				responcer,
 				cmp> routes;
 			std::set < fs::path > static_folders;
 
-			static std::pair < std::vector < std::pair < std::string, std::string > >, // var name var type
+			static std::pair < std::vector < std::string >, // var type
 							std::regex >                // regex 
 			                             convert_path_to_regex (std::string str)
 			{
-				std::vector < std::pair < std::string, std::string > > v;
+				std::vector < std::string > v;
 				std::string format = "^";
 				for (size_t i = 0 ; i < str.size () ; i ++)
 				{
 					if (str [i] == '{')
 					{
-						std::string var_name;
 						std::string var_type;
-						std::string* current = &var_name;
 						for (i ++ ; i < str.size () and str [i] != '}' ; i ++)
 						{
-							if (str [i] == '#') 
-							{
-								current = &var_type;
-								continue;
-							}
 							if (str [i] == ':') break;
-							(*current) += str [i];
+							var_type += str [i];
 						}
 						if (var_type == "") var_type = "string";
-						v.push_back ({var_name, var_type}); // var_type ?! TODO: 
+						if (str[i] == '}')
+						{
+							i -= var_type.size() + 1;
+							var_type = "string";
+						}
+						v.push_back (var_type);
 						format += "(";
 						for (i ++ ; i < str.size () and str [i] != '}' ; i ++)
 						{
@@ -143,13 +104,10 @@ namespace webnetpp
 					}
 					else 
 					{
-						//if (str [i] == '/')
-						//	format += '\\';
 						format += str [i];
 					}
 				}
 				format += "$";
-				//std::cout << "Regex: " << format;
 				return {v, std::regex (format)};
 			}
 
@@ -193,83 +151,64 @@ namespace webnetpp
 				return response (status_line ("200"), {{"Content-Type", "text/html; charset=utf-8"}}, path);
 			}
 
-			webnetpp& route (std::string path, respond_manager res)
+			template<typename Ret, typename... Ts>
+			webnetpp& route (std::string path, std::function<Ret(Ts...)> const& res)
 			{
 				auto x = convert_path_to_regex (path);
 				if (routes.find (x) == routes.end ())
-					routes [x] = res;
+					routes [x] = responcer(res);
 				else // rewriting path
-					routes [x] = res;
+					routes [x] = responcer(res);
 				return *this;
 			}
 
-			webnetpp& route (std::string path, std::function <response ()> res)
+			template<typename F>
+			webnetpp& route (std::string path, F _res)
 			{
+				const auto res = wrap(_res);
 				auto x = convert_path_to_regex (path);
 				if (routes.find (x) == routes.end ())
-					routes [x] = res;
+					routes [x] = responcer(res);
 				else // rewriting path
-					routes [x] = res;
-				return *this;
-			}
-
-			webnetpp& route (std::string path, std::function <response (path_vars)> res)
-			{
-				auto x = convert_path_to_regex (path);
-				if (routes.find (x) == routes.end ())
-					routes [x] = res;
-				else // rewriting path
-					routes [x] = res;
+					routes [x] = responcer(res);
 				return *this;
 			}
 			
-			response respond (const request& req)
+			response respond (const std::string& path)
 			{
 				// this->logger << "Requested: " << req.uri << "\n";
 				std::smatch pieces_match;
 				for (const auto &s : routes)
 				{
 					std::regex pieces_regex(s.first.second);
-					if (std::regex_match (req.uri, pieces_match, pieces_regex)) {
+					if (std::regex_match (path, pieces_match, pieces_regex)) {
 						std::ssub_match sub_match = pieces_match[0];
 						std::string piece = sub_match.str();
-						if (piece == req.uri)
+						if (piece == path)
 						{
 							path_vars params;
 							for (size_t i = 1; i < pieces_match.size(); ++i) {
 								sub_match = pieces_match[i];
 								piece = sub_match.str();
-								params [s.first.first[i - 1].first] = path_vars::var(piece, s.first.first[i - 1].second);
+								params += path_vars::var(piece, s.first.first[i - 1]);
 							}
-							return s.second.call (params); 
+							return s.second.call(params); 
 						}
 					}
 				}
 				return response (status_line ("1.1", "404"));
 			}
+			
+			response respond (const request& req)
+			{
+				return respond (req.uri);
+			}
 
 			response respond (const char* p)
 			{
-				std::string path (p);
-				// this->logger << "Requested: " << path << "\n";
-				std::smatch pieces_match;
-
-				for (const auto &s : routes)
-				{
-					std::regex pieces_regex(s.first.second);
-					if (std::regex_match (path, pieces_match, pieces_regex)) {
-						path_vars params;
-						for (size_t i = 0; i < pieces_match.size(); ++i) {
-							std::ssub_match sub_match = pieces_match[i];
-							std::string piece = sub_match.str();
-							if (i > 0)
-								params [s.first.first[i - 1].first] = path_vars::var(piece, s.first.first[i - 1].second);
-						}
-						return s.second.call (params); 
-					}
-				}
-				return response (status_line ("404"));
+				return respond (std::string(p));
 			}
+
 			void run (unsigned short PORT, unsigned int threads, unsigned requests = -1)
 			{
 				#ifdef __WIN32__

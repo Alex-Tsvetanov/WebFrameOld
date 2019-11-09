@@ -4,6 +4,8 @@ INCLUDE_DIRS=-I./tests -I./src -I./lib/win/mingw-std-threads-master -I./lib/win/
 LIB_FLAGS=-lwsock32 -lws2_32 -lws2_32
 WARNING_FLAGS=-Wall -Wno-long-long -pedantic -fconcepts
 
+.PHONY: build
+
 all: build build_test run_tests clean
 
 build:
