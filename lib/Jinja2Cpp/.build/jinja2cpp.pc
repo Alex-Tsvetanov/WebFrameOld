@@ -1,0 +1,12 @@
+prefix=C:/Program Files (x86)/Jinja2Cpp
+exec_prefix=C:/Program Files (x86)/Jinja2Cpp
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+ Name: Jinja2Cpp
+Description: 
+Version: 1.0.0
+
+ Requires:
+Libs: -L${libdir} -ljinja2cpp
+Cflags: -I${includedir} -Dvariant_CONFIG_SELECT_VARIANT=variant_VARIANT_NONSTD

@@ -1,0 +1,12 @@
+
+prefix=C:/Program Files (x86)/Jinja2Cpp
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${exec_prefix}/include
+Name: boost_container
+Description: No description
+Version: 1.64.0
+
+Cflags:  -I${includedir}
+Libs: -L${libdir}  -lboost_container
+Requires: boost_core,boost_static_assert,boost_move,boost_functional,boost_assert,boost_type_traits,boost_intrusive,boost_config

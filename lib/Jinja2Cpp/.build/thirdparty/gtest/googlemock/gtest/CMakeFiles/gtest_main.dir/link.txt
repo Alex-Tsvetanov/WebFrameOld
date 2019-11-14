@@ -1,0 +1,2 @@
+"C:/Program Files/mingw-w64/x86_64-8.1.0-posix-sjlj-rt_v6-rev0/mingw64/x86_64-w64-mingw32/bin/ar.exe" qc libgtest_main.a  CMakeFiles/gtest_main.dir/src/gtest_main.cc.obj
+"C:/Program Files/mingw-w64/x86_64-8.1.0-posix-sjlj-rt_v6-rev0/mingw64/x86_64-w64-mingw32/bin/ranlib.exe" libgtest_main.a

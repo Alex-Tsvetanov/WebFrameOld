@@ -1,0 +1,11 @@
+prefix=C:/Program Files (x86)/Jinja2Cpp
+exec_prefix=C:/Program Files (x86)/Jinja2Cpp
+libdir=C:/Program Files (x86)/Jinja2Cpp/lib
+includedir=C:/Program Files (x86)/Jinja2Cpp/include
+
+Name: fmt
+Description: A modern formatting library
+Version: 5.3.1
+Libs: -L${libdir} -lfmt
+Cflags: -I${includedir}
+

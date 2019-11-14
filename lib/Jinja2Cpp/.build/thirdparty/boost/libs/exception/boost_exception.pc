@@ -1,0 +1,12 @@
+
+prefix=C:/Program Files (x86)/Jinja2Cpp
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${exec_prefix}/include
+Name: boost_exception
+Description: No description
+Version: 1.64.0
+
+Cflags:  -I${includedir}
+Libs: -L${libdir}  -lboost_exception
+Requires: boost_core,boost_tuple,boost_assert,boost_smart_ptr,boost_config,boost_throw_exception

@@ -1,0 +1,11 @@
+prefix=D:/Users/atsve/OneDrive/Documents/GitHub/WebFrame/lib/Jinja2Cpp/.jinja2cpp-install
+exec_prefix=D:/Users/atsve/OneDrive/Documents/GitHub/WebFrame/lib/Jinja2Cpp/.jinja2cpp-install
+libdir=D:/Users/atsve/OneDrive/Documents/GitHub/WebFrame/lib/Jinja2Cpp/.jinja2cpp-install/lib
+includedir=D:/Users/atsve/OneDrive/Documents/GitHub/WebFrame/lib/Jinja2Cpp/.jinja2cpp-install/include
+
+Name: fmt
+Description: A modern formatting library
+Version: 5.3.1
+Libs: -L${libdir} -lfmt
+Cflags: -I${includedir}
+

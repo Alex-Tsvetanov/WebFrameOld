@@ -83,6 +83,7 @@ Moka::Context all ("**Web++ framework - testing**", [](Moka::Context& it) {
 
 int main ()
 {
+	
 	std::filebuf fb;
 	fb.open ("./bin/log/buffer.txt", std::ios::out);
 	std::ostream nill (&fb);

@@ -54,6 +54,8 @@
 #include <webnetpp/file.hpp>
 #include <webnetpp/lambda2function.hpp>
 
+#include <jinja2cpp/template.h>
+
 namespace webnetpp
 {
 	class webnetpp;
@@ -114,6 +116,7 @@ namespace webnetpp
 			SynchronizedFile logger;
 			SynchronizedFile errors;
 			SynchronizedFile performancer;
+			jinja2::Template tpl;
 		public:
 
 			webnetpp ()
@@ -153,9 +156,11 @@ namespace webnetpp
 				return *this;
 			}
 
-			static response get_file(std::string path)
+			response render(std::string path, jinja2::ValuesMap params = {})
 			{
-				return response (status_line ("200"), {{"Content-Type", "text/html; charset=utf-8"}}, path);
+				this->tpl.LoadFromFile(path);
+
+				return response (tpl.RenderAsString(params).value());
 			}
 
 			template<typename Ret, typename... Ts>

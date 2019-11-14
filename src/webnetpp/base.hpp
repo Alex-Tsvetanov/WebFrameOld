@@ -30,7 +30,7 @@ namespace webnetpp
 					this->value = value;
 				}
 
-				operator int () const
+				explicit operator int () const
 				{
 					if (value.size () == 0)
 						throw std::invalid_argument("path_vars::var::value is empty.");
@@ -44,13 +44,13 @@ namespace webnetpp
 							throw std::invalid_argument("path_vars::var::value is not matching path_vars::var::type (not integer)"); 
 					return ans;
 				}
-				operator const char* () const
+				explicit operator const char* () const
 				{
 					if (value.size () == 0)
 						throw std::invalid_argument("path_vars::var::value is empty.");
 					return value.c_str();
 				}
-				operator char () const
+				explicit operator char () const
 				{
 					if (value.size () == 0)
 						throw std::invalid_argument("path_vars::var::value is empty.");
@@ -58,14 +58,26 @@ namespace webnetpp
 						throw std::invalid_argument("path_vars::var::value is too long.");
 					return value[0];
 				}
-				operator std::string () const
+				explicit operator std::string () const
 				{
 					if (value.size () == 0)
 						throw std::invalid_argument("path_vars::var::value is empty.");
 					return value;
 				}
+				explicit operator std::string& () const
+				{
+					if (value.size () == 0)
+						throw std::invalid_argument("path_vars::var::value is empty.");
+					std::string* ans = new std::string(value);
+					return *ans;
+				}
 				template<typename T>
     			explicit operator T&() const { 
+					T* ans = new T(value);
+					return *ans;
+				}
+				template<typename T>
+    			explicit operator T() const { 
 					T* ans = new T(value);
 					return *ans;
 				}

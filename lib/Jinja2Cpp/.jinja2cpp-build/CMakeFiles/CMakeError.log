@@ -1,0 +1,34 @@
+The MPI test test_mpi for C in mode normal failed to compile with the following output:
+Change Dir: D:/Users/atsve/OneDrive/Documents/GitHub/WebFrame/lib/Jinja2Cpp/.jinja2cpp-build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/PROGRA~1/MINGW-~1/X86_64~1.0-P/mingw64/bin/make.exe cmTC_74971/fast && C:/PROGRA~1/MINGW-~1/X86_64~1.0-P/mingw64/bin/make.exe -f CMakeFiles/cmTC_74971.dir/build.make CMakeFiles/cmTC_74971.dir/build
+make.exe[1]: Entering directory 'D:/Users/atsve/OneDrive/Documents/GitHub/WebFrame/lib/Jinja2Cpp/.jinja2cpp-build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_74971.dir/test_mpi.c.obj
+"C:/Program Files/mingw-w64/x86_64-8.1.0-posix-sjlj-rt_v6-rev0/mingw64/bin/gcc.exe"    -o CMakeFiles/cmTC_74971.dir/test_mpi.c.obj   -c "C:/Program Files/CMake/share/cmake-3.16/Modules/FindMPI/test_mpi.c"
+C:/Program Files/CMake/share/cmake-3.16/Modules/FindMPI/test_mpi.c:1:10: fatal error: mpi.h: No such file or directory
+ #include <mpi.h>
+          ^~~~~~~
+compilation terminated.
+make.exe[1]: *** [CMakeFiles/cmTC_74971.dir/build.make:66: CMakeFiles/cmTC_74971.dir/test_mpi.c.obj] Error 1
+make.exe[1]: Leaving directory 'D:/Users/atsve/OneDrive/Documents/GitHub/WebFrame/lib/Jinja2Cpp/.jinja2cpp-build/CMakeFiles/CMakeTmp'
+make.exe: *** [Makefile:121: cmTC_74971/fast] Error 2
+
+
+
+The MPI test test_mpi for CXX in mode normal failed to compile with the following output:
+Change Dir: D:/Users/atsve/OneDrive/Documents/GitHub/WebFrame/lib/Jinja2Cpp/.jinja2cpp-build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/PROGRA~1/MINGW-~1/X86_64~1.0-P/mingw64/bin/make.exe cmTC_ed79f/fast && C:/PROGRA~1/MINGW-~1/X86_64~1.0-P/mingw64/bin/make.exe -f CMakeFiles/cmTC_ed79f.dir/build.make CMakeFiles/cmTC_ed79f.dir/build
+make.exe[1]: Entering directory 'D:/Users/atsve/OneDrive/Documents/GitHub/WebFrame/lib/Jinja2Cpp/.jinja2cpp-build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_ed79f.dir/test_mpi.cpp.obj
+"C:/Program Files/mingw-w64/x86_64-8.1.0-posix-sjlj-rt_v6-rev0/mingw64/bin/c++.exe"    -Wa,-mbig-obj -O1    -o CMakeFiles/cmTC_ed79f.dir/test_mpi.cpp.obj -c D:/Users/atsve/OneDrive/Documents/GitHub/WebFrame/lib/Jinja2Cpp/.jinja2cpp-build/CMakeFiles/FindMPI/test_mpi.cpp
+D:/Users/atsve/OneDrive/Documents/GitHub/WebFrame/lib/Jinja2Cpp/.jinja2cpp-build/CMakeFiles/FindMPI/test_mpi.cpp:1:10: fatal error: mpi.h: No such file or directory
+ #include <mpi.h>
+          ^~~~~~~
+compilation terminated.
+make.exe[1]: *** [CMakeFiles/cmTC_ed79f.dir/build.make:66: CMakeFiles/cmTC_ed79f.dir/test_mpi.cpp.obj] Error 1
+make.exe[1]: Leaving directory 'D:/Users/atsve/OneDrive/Documents/GitHub/WebFrame/lib/Jinja2Cpp/.jinja2cpp-build/CMakeFiles/CMakeTmp'
+make.exe: *** [Makefile:121: cmTC_ed79f/fast] Error 2
+
+
+

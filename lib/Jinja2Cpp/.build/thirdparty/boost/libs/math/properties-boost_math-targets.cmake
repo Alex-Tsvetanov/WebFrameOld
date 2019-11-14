@@ -1,0 +1,14 @@
+
+set_target_properties(boost::math PROPERTIES INTERFACE_PKG_CONFIG_NAME boost_math)
+
+set_target_properties(boost::math_c99 PROPERTIES INTERFACE_PKG_CONFIG_NAME boost_math_c99)
+
+set_target_properties(boost::math_c99f PROPERTIES INTERFACE_PKG_CONFIG_NAME boost_math_c99f)
+
+set_target_properties(boost::math_c99l PROPERTIES INTERFACE_PKG_CONFIG_NAME boost_math_c99l)
+
+set_target_properties(boost::math_tr1 PROPERTIES INTERFACE_PKG_CONFIG_NAME boost_math_tr1)
+
+set_target_properties(boost::math_tr1f PROPERTIES INTERFACE_PKG_CONFIG_NAME boost_math_tr1f)
+
+set_target_properties(boost::math_tr1l PROPERTIES INTERFACE_PKG_CONFIG_NAME boost_math_tr1l)

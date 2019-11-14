@@ -1,0 +1,11 @@
+
+prefix=D:/Users/atsve/OneDrive/Documents/GitHub/WebFrame/lib/Jinja2Cpp/.jinja2cpp-install
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${exec_prefix}/include
+Name: boost_intrusive
+Description: No description
+Version: 1.64.0
+
+Cflags:  -I${includedir}
+Requires: boost_core,boost_static_assert,boost_move,boost_functional,boost_assert,boost_config

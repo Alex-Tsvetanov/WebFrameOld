@@ -1,0 +1,2 @@
+
+set_target_properties(boost::lexical_cast PROPERTIES INTERFACE_PKG_CONFIG_NAME boost_lexical_cast)

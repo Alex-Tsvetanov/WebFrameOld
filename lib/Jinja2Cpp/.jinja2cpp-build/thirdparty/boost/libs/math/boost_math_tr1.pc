@@ -1,0 +1,12 @@
+
+prefix=D:/Users/atsve/OneDrive/Documents/GitHub/WebFrame/lib/Jinja2Cpp/.jinja2cpp-install
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${exec_prefix}/include
+Name: boost_math_tr1
+Description: No description
+Version: 1.64.0
+
+Cflags:  -I${includedir}
+Libs: -L${libdir}  -lboost_math_tr1
+Requires: boost_math

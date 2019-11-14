@@ -1,4 +1,3 @@
-
 #include <webnetpp/webnetpp.hpp>
 #include <iostream>
 #include <sstream>
@@ -6,22 +5,11 @@
 
 int main ()
 {
+	int pass = 0;
 	webnetpp::webnetpp app;
-	app.route ("/", []() {
-						return "Hello, World!";
-					}
-		)
-	   .route ("/{steps:[0-9]+}", [](int steps) {
-						std::stringstream res;
-						res << "Hello World! We are " << steps;
-						return res.str();
-					}
-		)
-	   .route ("/user/{[0-9]+}", [](int id) {
-						std::stringstream res;
-						res << "Hello! Your Id is " << id;
-						return res.str();
-					}
+	app.route ("/{.*}", [&](std::string user) {
+				return app.render("./bin/template.html", {{"username", user}});
+			}
 		)
 	;
 

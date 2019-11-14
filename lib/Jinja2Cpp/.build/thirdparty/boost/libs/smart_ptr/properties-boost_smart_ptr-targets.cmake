@@ -1,0 +1,2 @@
+
+set_target_properties(boost::smart_ptr PROPERTIES INTERFACE_PKG_CONFIG_NAME boost_smart_ptr)

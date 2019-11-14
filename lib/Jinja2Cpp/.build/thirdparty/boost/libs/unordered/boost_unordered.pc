@@ -1,0 +1,11 @@
+
+prefix=C:/Program Files (x86)/Jinja2Cpp
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${exec_prefix}/include
+Name: boost_unordered
+Description: No description
+Version: 1.64.0
+
+Cflags:  -I${includedir}
+Requires: boost_core,boost_container,boost_iterator,boost_tuple,boost_move,boost_functional,boost_detail,boost_assert,boost_throw_exception,boost_preprocessor,boost_type_traits,boost_config,boost_smart_ptr

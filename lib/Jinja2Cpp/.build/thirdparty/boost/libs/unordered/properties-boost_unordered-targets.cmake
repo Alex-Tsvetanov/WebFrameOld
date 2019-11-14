@@ -1,0 +1,2 @@
+
+set_target_properties(boost::unordered PROPERTIES INTERFACE_PKG_CONFIG_NAME boost_unordered)
