@@ -11,18 +11,19 @@
             "includePath": [
                 "${workspaceFolder}/",
                 "${workspaceFolder}/src",
-                "${workspaceFolder}/lib/win/cpr/include",
                 "${workspaceFolder}/lib/win/mingw-std-threads-master",
-                "${workspaceFolder}/lib/win/filesystem-master/include"
+                "${workspaceFolder}/lib/win/filesystem-master/include",
+                "${workspaceFolder}/lib/win/stopwatch",
+                "${workspaceFolder}/lib/Jinja2Cpp/.jinja2cpp-install/include"
             ],
             "defines": [
                 "_DEBUG",
                 "UNICODE",
                 "_UNICODE"
             ],
-            "compilerPath": "C:\\MinGW\\MinGW\\bin\\g++.exe",
+            "compilerPath": "\"C:/Program Files/mingw-w64/x86_64-8.1.0-posix-sjlj-rt_v6-rev0/mingw64/bin/g++.exe\"",
             "cStandard": "c11",
-            "cppStandard": "c++20",
+            "cppStandard": "c++17",
             "intelliSenseMode": "gcc-x64",
             "compilerArgs": [
                 "-std=c++17",
