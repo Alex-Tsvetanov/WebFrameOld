@@ -1,0 +1,289 @@
+\documentclass[documentation.tex]{subfiles}
+\begin{document}
+
+Стартирайки 3 сървъра (на WebFrame++, на Flask и на Express) можем да изпращаме еднакви заявки към тях. Резултатът беше:
+
+\subsection{Hello, World!}
+    Първият тест, който бе направен се състоеше в това да се „изциклят числата от 1 до n“ и след това да се върне като резултат от заявката символния низ „Hello, World!“. С псевдо код този тест може да се представи като изпълнение на фрагмента:
+    
+    \begin{algorithm}
+    \caption{}\label{test1}
+        \begin{algorithmic}[1]
+            \Procedure{Request}{}
+            \State $\textit{n} \gets \textit{number}$
+            \BState \emph{begin}:
+            \State $\textit{i} := 0$
+            \BState \emph{loop}:
+            \If {$\textit{i} == \textit{n}$} 
+                \Return "Hello, World!"
+            \EndIf
+            \If {$\textit{i} < \textit{n}$}
+                \State \textit{i} := \textit{i} + 1
+                \State \textbf{goto} \emph{loop}.
+            \EndIf
+            \EndProcedure
+        \end{algorithmic}
+    \end{algorithm}
+    \newpage
+    \subsubsection{Сравнение с Flask (Python)}
+        \begin{longtable}{|r|r|r|r|r|}
+        \caption{Сравнение м/у WebFrame++ и Flask}
+        \hline
+        \multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Съпки на цикъл \\ преди връщане на\\ "Hello, World!"\end{tabular}} & \multicolumn{1}{c|}{WebFrame++} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Flask\end{tabular}} & \multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}}Сравнение м/у\\ WebFrame++\\ и\\ Flask\end{tabular}} \\ \hline
+        \endfirsthead
+        
+        \multicolumn{5}{c}%
+        {{\bfseries \tablename\ \thetable{} -- продължение от предишната страница}} \\
+        \hline 
+        \multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Съпки на цикъл \\ преди връщане на\\ "Hello, World!"\end{tabular}} & \multicolumn{1}{c|}{WebFrame++} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Flask\end{tabular}} & \multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}}Сравнение м/у\\ WebFrame++\\ и\\ Flask\end{tabular}} \\ \hline 
+        \endhead
+        
+        \hline \multicolumn{5}{|c|}{{Продължава на следващата страница}} \\ \hline
+        \endfoot
+        
+        \hline \hline
+        \endlastfoot
+        
+        2                                                                                                                         & 0m0.235s                        & 0m0.226s                                                                    & {\color[HTML]{FF0000} -0.0002m}                   & {\color[HTML]{FF0000} -3.83\%}                    \\ \hline
+        4                                                                                                                         & 0m0.227s                        & 0m0.227s                                                                    & {\color[HTML]{32CB00} 0.0000m}                    & {\color[HTML]{32CB00} 0.00\%}                     \\ \hline
+        8                                                                                                                         & 0m0.224s                        & 0m0.230s                                                                    & {\color[HTML]{32CB00} 0.0001m}                    & {\color[HTML]{32CB00} 2.68\%}                     \\ \hline
+        16                                                                                                                        & 0m0.228s                        & 0m0.227s                                                                    & {\color[HTML]{FF0000} 0.0000m}                    & {\color[HTML]{FF0000} -0.44\%}                    \\ \hline
+        32                                                                                                                        & 0m0.226s                        & 0m0.236s                                                                    & {\color[HTML]{32CB00} 0.0002m}                    & {\color[HTML]{32CB00} 4.42\%}                     \\ \hline
+        64                                                                                                                        & 0m0.229s                        & 0m0.228s                                                                    & {\color[HTML]{FF0000} 0.0000m}                    & {\color[HTML]{FF0000} -0.44\%}                    \\ \hline
+        128                                                                                                                       & 0m0.226s                        & 0m0.226s                                                                    & {\color[HTML]{32CB00} 0.0000m}                    & {\color[HTML]{32CB00} 0.00\%}                     \\ \hline
+        256                                                                                                                       & 0m0.228s                        & 0m0.227s                                                                    & {\color[HTML]{FF0000} 0.0000m}                    & {\color[HTML]{FF0000} -0.44\%}                    \\ \hline
+        512                                                                                                                       & 0m0.226s                        & 0m0.226s                                                                    & {\color[HTML]{32CB00} 0.0000m}                    & {\color[HTML]{32CB00} 0.00\%}                     \\ \hline
+        1024                                                                                                                      & 0m0.226s                        & 0m0.227s                                                                    & {\color[HTML]{32CB00} 0.0000m}                    & {\color[HTML]{32CB00} 0.44\%}                     \\ \hline
+        2048                                                                                                                      & 0m0.228s                        & 0m0.228s                                                                    & {\color[HTML]{32CB00} 0.0000m}                    & {\color[HTML]{32CB00} 0.00\%}                     \\ \hline
+        4096                                                                                                                      & 0m0.228s                        & 0m0.226s                                                                    & {\color[HTML]{FF0000} 0.0000m}                    & {\color[HTML]{FF0000} -0.88\%}                    \\ \hline
+        8192                                                                                                                      & 0m0.225s                        & 0m0.226s                                                                    & {\color[HTML]{32CB00} 0.0000m}                    & {\color[HTML]{32CB00} 0.44\%}                     \\ \hline
+        16384                                                                                                                     & 0m0.225s                        & 0m0.226s                                                                    & {\color[HTML]{32CB00} 0.0000m}                    & {\color[HTML]{32CB00} 0.44\%}                     \\ \hline
+        32768                                                                                                                     & 0m0.225s                        & 0m0.226s                                                                    & {\color[HTML]{32CB00} 0.0000m}                    & {\color[HTML]{32CB00} 0.44\%}                     \\ \hline
+        65536                                                                                                                     & 0m0.225s                        & 0m0.227s                                                                    & {\color[HTML]{32CB00} 0.0000m}                    & {\color[HTML]{32CB00} 0.89\%}                     \\ \hline
+        131072                                                                                                                    & 0m0.226s                        & 0m0.233s                                                                    & {\color[HTML]{32CB00} 0.0001m}                    & {\color[HTML]{32CB00} 3.10\%}                     \\ \hline
+        262144                                                                                                                    & 0m0.227s                        & 0m0.238s                                                                    & {\color[HTML]{32CB00} 0.0002m}                    & {\color[HTML]{32CB00} 4.85\%}                     \\ \hline
+        524288                                                                                                                    & 0m0.228s                        & 0m0.250s                                                                    & {\color[HTML]{32CB00} 0.0004m}                    & {\color[HTML]{32CB00} 9.65\%}                     \\ \hline
+        1048576                                                                                                                   & 0m0.229s                        & 0m0.277s                                                                    & {\color[HTML]{32CB00} 0.0008m}                    & {\color[HTML]{32CB00} 20.96\%}                    \\ \hline
+        2097152                                                                                                                   & 0m0.231s                        & 0m0.290s                                                                    & {\color[HTML]{32CB00} 0.0010m}                    & {\color[HTML]{32CB00} 25.54\%}                    \\ \hline
+        4194304                                                                                                                   & 0m0.239s                        & 0m0.359s                                                                    & {\color[HTML]{32CB00} 0.0020m}                    & {\color[HTML]{32CB00} 50.21\%}                    \\ \hline
+        8388608                                                                                                                   & 0m0.242s                        & 0m0.458s                                                                    & {\color[HTML]{32CB00} 0.0036m}                    & {\color[HTML]{32CB00} 89.26\%}                    \\ \hline
+        16777216                                                                                                                  & 0m0.258s                        & 0m0.692s                                                                    & {\color[HTML]{32CB00} 0.0072m}                    & {\color[HTML]{32CB00} 168.22\%}                   \\ \hline
+        33554432                                                                                                                  & 0m0.290s                        & 0m1.237s                                                                    & {\color[HTML]{32CB00} 0.0158m}                    & {\color[HTML]{32CB00} 326.55\%}                   \\ \hline
+        67108864                                                                                                                  & 0m0.360s                        & 0m2.163s                                                                    & {\color[HTML]{32CB00} 0.0301m}                    & {\color[HTML]{32CB00} 500.83\%}                   \\ \hline
+        134217728                                                                                                                 & 0m0.475s                        & 0m4.102s                                                                    & {\color[HTML]{32CB00} 0.0605m}                    & {\color[HTML]{32CB00} 763.58\%}                   \\ \hline
+        268435456                                                                                                                 & 0m0.716s                        & 0m7.896s                                                                    & {\color[HTML]{32CB00} 0.1197m}                    & {\color[HTML]{32CB00} 1002.79\%}                  \\ \hline
+        536870912                                                                                                                 & 0m1.217s                        & 0m15.572s                                                                   & {\color[HTML]{32CB00} 0.2393m}                    & {\color[HTML]{32CB00} 1179.54\%}                  \\ \hline
+        1073741824                                                                                                                & 0m2.199s                        & 0m31.241s                                                                   & {\color[HTML]{32CB00} 0.4840m}                    & {\color[HTML]{32CB00} 1320.69\%}                  \\ \hline
+        \multicolumn{3}{|r|}{Най-голямото изоставане на WebFrame++}                                                                                                                                                                               & {\color[HTML]{FF0000} -0.0002m}                   & {\color[HTML]{FF0000} -3.83\%}                    \\ \hline
+        \multicolumn{3}{|r|}{Най-големият аванс на WebFrame++}                                                                                                                                                                                      & {\color[HTML]{32CB00} 0.4840m}                    & {\color[HTML]{32CB00} 1320.69\%}                  \\ \hline
+        \multicolumn{3}{|r|}{Най-малкото изоставане на WebFrame++}                                                                                                                                                                                & {\color[HTML]{FF0000} 0.0000m}                    & {\color[HTML]{FF0000} -0.44\%}                    \\ \hline
+        \multicolumn{3}{|r|}{Най-малкия аванс на WebFrame++}                                                                                                                                                                                      & {\color[HTML]{32CB00} 0.0000m}                    & {\color[HTML]{32CB00} 0.44\%}                     \\ \hline
+        \end{longtable} \\
+    
+    \subsubsection{Сравнение с Express (Node.JS)}
+        \begin{longtable}{|r|r|r|r|r|}
+        
+        \caption{Сравнение м/у WebFrame++ и Express}
+        \hline
+        \multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Съпки на цикъл \\ \\ преди връщане на \\ \\ "Hello, World!"\end{tabular}} & \multicolumn{1}{c|}{WebFrame++} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Node.JS\\ Express\end{tabular}} & \multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}}Сравнение\\ м/у\\ WebFram++\\ и\\ Node.JS Express\end{tabular}} \\ \hline
+        \endfirsthead
+        
+        \multicolumn{5}{c}%
+        {{\bfseries \tablename\ \thetable{} -- продължение от предишната страница}} \\
+        \hline 
+        \multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Съпки на цикъл \\ \\ преди връщане на \\ \\ "Hello, World!"\end{tabular}} & \multicolumn{1}{c|}{WebFrame++} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Node.JS\\ Express\end{tabular}} & \multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}}Сравнение\\ м/у\\ WebFram++\\ и\\ Node.JS Express\end{tabular}} \\ \hline
+        \endhead
+        
+        \hline \multicolumn{5}{|c|}{{Продължава на следващата страница}} \\ \hline
+        \endfoot
+        
+        \hline \hline
+        \endlastfoot
+        
+        
+        \hline
+        \multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Съпки на цикъл \\ \\ преди връщане на \\ \\ "Hello, World!"\end{tabular}} & \multicolumn{1}{c|}{WebFrame++} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Node.JS\\ Express\end{tabular}} & \multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}}Сравнение\\ м/у\\ WebFram++\\ и\\ Node.JS Express\end{tabular}} \\ \hline
+        2                                                                                                                         & 0m0.235s                        & 0m0.033s                                                                       & {\color[HTML]{FF0000} -0.0034m}                       & {\color[HTML]{FF0000} -85.96\%}                        \\ \hline
+        4                                                                                                                         & 0m0.227s                        & 0m0.028s                                                                       & {\color[HTML]{FF0000} -0.0033m}                       & {\color[HTML]{FF0000} -87.67\%}                        \\ \hline
+        8                                                                                                                         & 0m0.224s                        & 0m0.027s                                                                       & {\color[HTML]{FF0000} -0.0033m}                       & {\color[HTML]{FF0000} -87.95\%}                        \\ \hline
+        16                                                                                                                        & 0m0.228s                        & 0m0.030s                                                                       & {\color[HTML]{FF0000} -0.0033m}                       & {\color[HTML]{FF0000} -86.84\%}                        \\ \hline
+        32                                                                                                                        & 0m0.226s                        & 0m0.030s                                                                       & {\color[HTML]{FF0000} -0.0033m}                       & {\color[HTML]{FF0000} -86.73\%}                        \\ \hline
+        64                                                                                                                        & 0m0.229s                        & 0m0.026s                                                                       & {\color[HTML]{FF0000} -0.0034m}                       & {\color[HTML]{FF0000} -88.65\%}                        \\ \hline
+        128                                                                                                                       & 0m0.226s                        & 0m0.026s                                                                       & {\color[HTML]{FF0000} -0.0033m}                       & {\color[HTML]{FF0000} -88.50\%}                        \\ \hline
+        256                                                                                                                       & 0m0.228s                        & 0m0.031s                                                                       & {\color[HTML]{FF0000} -0.0033m}                       & {\color[HTML]{FF0000} -86.40\%}                        \\ \hline
+        512                                                                                                                       & 0m0.226s                        & 0m0.026s                                                                       & {\color[HTML]{FF0000} -0.0033m}                       & {\color[HTML]{FF0000} -88.50\%}                        \\ \hline
+        1024                                                                                                                      & 0m0.226s                        & 0m0.030s                                                                       & {\color[HTML]{FF0000} -0.0033m}                       & {\color[HTML]{FF0000} -86.73\%}                        \\ \hline
+        2048                                                                                                                      & 0m0.228s                        & 0m0.027s                                                                       & {\color[HTML]{FF0000} -0.0034m}                       & {\color[HTML]{FF0000} -88.16\%}                        \\ \hline
+        4096                                                                                                                      & 0m0.228s                        & 0m0.034s                                                                       & {\color[HTML]{FF0000} -0.0032m}                       & {\color[HTML]{FF0000} -85.09\%}                        \\ \hline
+        8192                                                                                                                      & 0m0.225s                        & 0m0.029s                                                                       & {\color[HTML]{FF0000} -0.0033m}                       & {\color[HTML]{FF0000} -87.11\%}                        \\ \hline
+        16384                                                                                                                     & 0m0.225s                        & 0m0.032s                                                                       & {\color[HTML]{FF0000} -0.0032m}                       & {\color[HTML]{FF0000} -85.78\%}                        \\ \hline
+        32768                                                                                                                     & 0m0.225s                        & 0m0.031s                                                                       & {\color[HTML]{FF0000} -0.0032m}                       & {\color[HTML]{FF0000} -86.22\%}                        \\ \hline
+        65536                                                                                                                     & 0m0.225s                        & 0m0.034s                                                                       & {\color[HTML]{FF0000} -0.0032m}                       & {\color[HTML]{FF0000} -84.89\%}                        \\ \hline
+        131072                                                                                                                    & 0m0.226s                        & 0m0.038s                                                                       & {\color[HTML]{FF0000} -0.0031m}                       & {\color[HTML]{FF0000} -83.19\%}                        \\ \hline
+        262144                                                                                                                    & 0m0.227s                        & 0m0.053s                                                                       & {\color[HTML]{FF0000} -0.0029m}                       & {\color[HTML]{FF0000} -76.65\%}                        \\ \hline
+        524288                                                                                                                    & 0m0.228s                        & 0m0.075s                                                                       & {\color[HTML]{FF0000} -0.0026m}                       & {\color[HTML]{FF0000} -67.11\%}                        \\ \hline
+        1048576                                                                                                                   & 0m0.229s                        & 0m0.119s                                                                       & {\color[HTML]{FF0000} -0.0018m}                       & {\color[HTML]{FF0000} -48.03\%}                        \\ \hline
+        2097152                                                                                                                   & 0m0.231s                        & 0m0.213s                                                                       & {\color[HTML]{FF0000} -0.0003m}                       & {\color[HTML]{FF0000} -7.79\%}                         \\ \hline
+        4194304                                                                                                                   & 0m0.239s                        & 0m0.387s                                                                       & {\color[HTML]{32CB00} 0.0025m}                        & {\color[HTML]{32CB00} 61.92\%}                         \\ \hline
+        8388608                                                                                                                   & 0m0.242s                        & 0m0.770s                                                                       & {\color[HTML]{32CB00} 0.0088m}                        & {\color[HTML]{32CB00} 218.18\%}                        \\ \hline
+        16777216                                                                                                                  & 0m0.258s                        & 0m1.556s                                                                       & {\color[HTML]{32CB00} 0.0216m}                        & {\color[HTML]{32CB00} 503.10\%}                        \\ \hline
+        33554432                                                                                                                  & 0m0.290s                        & 0m3.006s                                                                       & {\color[HTML]{32CB00} 0.0453m}                        & {\color[HTML]{32CB00} 936.55\%}                        \\ \hline
+        67108864                                                                                                                  & 0m0.360s                        & 0m5.873s                                                                       & {\color[HTML]{32CB00} 0.0919m}                        & {\color[HTML]{32CB00} 1531.39\%}                       \\ \hline
+        134217728                                                                                                                 & 0m0.475s                        & 0m11.954s                                                                      & {\color[HTML]{32CB00} 0.1913m}                        & {\color[HTML]{32CB00} 2416.63\%}                       \\ \hline
+        268435456                                                                                                                 & 0m0.716s                        & 0m23.419s                                                                      & {\color[HTML]{32CB00} 0.3784m}                        & {\color[HTML]{32CB00} 3170.81\%}                       \\ \hline
+        536870912                                                                                                                 & 0m1.217s                        & 0m46.988s                                                                      & {\color[HTML]{32CB00} 0.7629m}                        & {\color[HTML]{32CB00} 3760.97\%}                       \\ \hline
+        1073741824                                                                                                                & 0m2.199s                        & 1m34.091s                                                                      & {\color[HTML]{32CB00} 1.5315m}                        & {\color[HTML]{32CB00} 4178.81\%}                       \\ \hline
+        \multicolumn{3}{|r|}{Най-голямото изоставане на WebFrame++}                                                                                                                                                                                  & {\color[HTML]{FF0000} -0.0034m}                       & {\color[HTML]{FF0000} -88.65\%}                        \\ \hline
+        \multicolumn{3}{|r|}{Най-голeят аванс на WebFrame++}                                                                                                                                                                                         & {\color[HTML]{32CB00} 1.5315m}                        & {\color[HTML]{32CB00} 4178.81\%}                       \\ \hline
+        \multicolumn{3}{|r|}{Най-малкото изоставане на WebFrame++}                                                                                                                                                                                   & {\color[HTML]{FF0000} -0.0003m}                       & {\color[HTML]{FF0000} -7.79\%}                         \\ \hline
+        \multicolumn{3}{|r|}{Най-малкия аванс на WebFrame++}                                                                                                                                                                                         & {\color[HTML]{32CB00} 0.0025m}                        & {\color[HTML]{32CB00} 61.92\%}                         \\ \hline
+        \end{longtable}
+\subsection{Сума на n произволни числа}
+    Вторият тест се представя с псевдо код по следния начин:
+    \begin{algorithm}
+    \caption{}\label{test1}
+        \begin{algorithmic}[1]
+            \Procedure{Request}{}
+                \State $\textit{n} \gets \textit{number}$
+                \State $\textit{sum} \gets \textit{global reference}$
+                \BState \emph{begin}:
+                \State $\textit{i} := 0$
+                \BState \emph{loop}:
+                \If {$\textit{i} == \textit{n}$} \Return "Hello, World!"
+                \EndIf
+                \If {$\textit{i} < \textit{n}$}
+                    \State $\textit{i} := \textit{i} + 1$
+                    \State $\textit{num} \gets random\ generated\ number$
+                    \State $\textit{sum}:=(\textit{sum}+\textit{num})\mod{10^{9}}$
+                    \State \textbf{goto} \emph{loop}.
+                \EndIf
+            \EndProcedure
+        \end{algorithmic}
+    \end{algorithm}
+
+    Като са използвани вградените в езиците генератори на „произволни“ числа с оглед това, че генерирането на „произволни“ числа е една от най-бавните операции в езиците.
+
+    \subsubsection{Сравнение с Flask}
+        \begin{longtable}{|r|r|r|r|r|}
+        \caption{Сравнение м/у WebFrame++ и Flask (тежки операции)}
+        \hline
+        \multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Колко произволни числа\\ще съберем \\ преди връщане на\\ "Hello, World!"\end{tabular}} & \multicolumn{1}{c|}{WebFrame++} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Flask\end{tabular}} & \multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}}Сравнение м/у\\ WebFrame++\\ и\\ Flask\end{tabular}} \\ \hline
+        \endfirsthead
+        
+        \multicolumn{5}{c}%
+        {{\bfseries \tablename\ \thetable{} -- продължение от предишната страница}} \\
+        \hline 
+        \multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Колко произволни числа\\ ще съберем \\ преди връщане на\\ "Hello, World!"\end{tabular}} & \multicolumn{1}{c|}{WebFrame++} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Flask\end{tabular}} & \multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}}Сравнение м/у\\ WebFrame++\\ и\\ Flask\end{tabular}} \\ \hline 
+        \endhead
+        
+        \hline \multicolumn{5}{|c|}{{Продължава на следващата страница}} \\ \hline
+        \endfoot
+        
+        \hline \hline
+        \endlastfoot
+        \hline
+        2                                                   & 0m0.228s                      & 0m0.269s                          & {\color[HTML]{32CB00} 0.0007m}    & {\color[HTML]{32CB00} 17.98\%}     \\ \hline
+        4                                                   & 0m0.224s                      & 0m0.271s                          & {\color[HTML]{32CB00} 0.0008m}    & {\color[HTML]{32CB00} 20.98\%}     \\ \hline
+        8                                                   & 0m0.236s                      & 0m0.268s                          & {\color[HTML]{32CB00} 0.0005m}    & {\color[HTML]{32CB00} 13.56\%}     \\ \hline
+        16                                                  & 0m0.226s                      & 0m0.269s                          & {\color[HTML]{32CB00} 0.0007m}    & {\color[HTML]{32CB00} 19.03\%}     \\ \hline
+        32                                                  & 0m0.224s                      & 0m0.272s                          & {\color[HTML]{32CB00} 0.0008m}    & {\color[HTML]{32CB00} 21.43\%}     \\ \hline
+        64                                                  & 0m0.226s                      & 0m0.271s                          & {\color[HTML]{32CB00} 0.0008m}    & {\color[HTML]{32CB00} 19.91\%}     \\ \hline
+        128                                                 & 0m0.225s                      & 0m0.271s                          & {\color[HTML]{32CB00} 0.0008m}    & {\color[HTML]{32CB00} 20.44\%}     \\ \hline
+        256                                                 & 0m0.227s                      & 0m0.271s                          & {\color[HTML]{32CB00} 0.0007m}    & {\color[HTML]{32CB00} 19.38\%}     \\ \hline
+        512                                                 & 0m0.225s                      & 0m0.271s                          & {\color[HTML]{32CB00} 0.0008m}    & {\color[HTML]{32CB00} 20.44\%}     \\ \hline
+        1024                                                & 0m0.226s                      & 0m0.282s                          & {\color[HTML]{32CB00} 0.0009m}    & {\color[HTML]{32CB00} 24.78\%}     \\ \hline
+        2048                                                & 0m0.226s                      & 0m0.277s                          & {\color[HTML]{32CB00} 0.0009m}    & {\color[HTML]{32CB00} 22.57\%}     \\ \hline
+        4096                                                & 0m0.224s                      & 0m0.293s                          & {\color[HTML]{32CB00} 0.0012m}    & {\color[HTML]{32CB00} 30.80\%}     \\ \hline
+        8192                                                & 0m0.227s                      & 0m0.306s                          & {\color[HTML]{32CB00} 0.0013m}    & {\color[HTML]{32CB00} 34.80\%}     \\ \hline
+        16384                                               & 0m0.227s                      & 0m0.323s                          & {\color[HTML]{32CB00} 0.0016m}    & {\color[HTML]{32CB00} 42.29\%}     \\ \hline
+        32768                                               & 0m0.224s                      & 0m0.382s                          & {\color[HTML]{32CB00} 0.0026m}    & {\color[HTML]{32CB00} 70.54\%}     \\ \hline
+        65536                                               & 0m0.236s                      & 0m0.517s                          & {\color[HTML]{32CB00} 0.0047m}    & {\color[HTML]{32CB00} 119.07\%}    \\ \hline
+        131072                                              & 0m0.227s                      & 0m0.755s                          & {\color[HTML]{32CB00} 0.0088m}    & {\color[HTML]{32CB00} 232.60\%}    \\ \hline
+        262144                                              & 0m0.230s                      & 0m1.299s                          & {\color[HTML]{32CB00} 0.0178m}    & {\color[HTML]{32CB00} 464.78\%}    \\ \hline
+        524288                                              & 0m0.249s                      & 0m2.265s                          & {\color[HTML]{32CB00} 0.0336m}    & {\color[HTML]{32CB00} 809.64\%}    \\ \hline
+        1048576                                             & 0m0.250s                      & 0m4.255s                          & {\color[HTML]{32CB00} 0.0668m}    & {\color[HTML]{32CB00} 1602.00\%}   \\ \hline
+        2097152                                             & 0m0.262s                      & 0m8.349s                          & {\color[HTML]{32CB00} 0.1348m}    & {\color[HTML]{32CB00} 3086.64\%}   \\ \hline
+        4194304                                             & 0m0.288s                      & 0m16.366s                         & {\color[HTML]{32CB00} 0.2680m}    & {\color[HTML]{32CB00} 5582.64\%}   \\ \hline
+        8388608                                             & 0m0.351s                      & 0m32.125s                         & {\color[HTML]{32CB00} 0.5296m}    & {\color[HTML]{32CB00} 9052.42\%}   \\ \hline
+        16777216                                            & 0m0.455s                      & 1m3.665s                          & {\color[HTML]{32CB00} 1.0535m}    & {\color[HTML]{32CB00} 13892.31\%}  \\ \hline
+        33554432                                            & 0m0.693s                      & 2m8.230s                          & {\color[HTML]{32CB00} 2.1256m}    & {\color[HTML]{32CB00} 18403.61\%}  \\ \hline
+        67108864                                            & 0m1.139s                      & 4m19.225s                         & {\color[HTML]{32CB00} 4.3014m}    & {\color[HTML]{32CB00} 22659.00\%}  \\ \hline
+        134217728                                           & 0m2.056s                      & 8m35.322s                         & {\color[HTML]{32CB00} 8.5544m}    & {\color[HTML]{32CB00} 24964.30\%}  \\ \hline
+        268435456                                           & 0m3.888s                      & 8m38.944s                         & {\color[HTML]{32CB00} 8.5843m}    & {\color[HTML]{32CB00} 13247.33\%}  \\ \hline
+        536870912                                           & 0m7.481s                      & 17m19.063s                        & {\color[HTML]{32CB00} 17.1930m}   & {\color[HTML]{32CB00} 13789.36\%}  \\ \hline
+        1073741824                                          & 0m14.729s                     & 33m54.976s                        & {\color[HTML]{32CB00} 33.6708m}   & {\color[HTML]{32CB00} 13716.12\%}  \\ \hline
+        \multicolumn{3}{|r|}{Най-голямото изоставане на WebFrame++}                                                             & NaN                               & NaN                                \\ \hline
+        \multicolumn{3}{|r|}{Най-голeят аванс на WebFrame++}                                                                    & {\color[HTML]{32CB00} 33.6708m}   & {\color[HTML]{32CB00} 24964.30\%}  \\ \hline
+        \multicolumn{3}{|r|}{Най-малкото изоставане на WebFrame++}                                                              & NaN                               & NaN                                \\ \hline
+        \multicolumn{3}{|r|}{Най-малкия аванс на WebFrame++}                                                                    & {\color[HTML]{32CB00} 0.0005m}    & {\color[HTML]{32CB00} 13.56\%}     \\ \hline
+        
+        \end{longtable}
+
+    \subsubsection{Сравнение с Express}
+        \begin{longtable}{|r|r|r|r|r|}
+    \caption{Сравнение м/у WebFrame++ и Express (тежки операции)}
+    \hline
+    \multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Колко произволни числа\\ще съберем \\ преди връщане на\\ "Hello, World!"\end{tabular}} & \multicolumn{1}{c|}{WebFrame++} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Flask\end{tabular}} & \multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}}Сравнение м/у\\ WebFrame++\\ и\\ Express\end{tabular}} \\ \hline
+    \endfirsthead
+    
+    \multicolumn{5}{c}%
+    {{\bfseries \tablename\ \thetable{} -- продължение от предишната страница}} \\
+    \hline 
+    \multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Колко произволни числа\\ ще съберем \\ преди връщане на\\ "Hello, World!"\end{tabular}} & \multicolumn{1}{c|}{WebFrame++} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Express\end{tabular}} & \multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}}Сравнение м/у\\ WebFrame++\\ и\\ Express\end{tabular}} \\ \hline 
+    \endhead
+    
+    \hline \multicolumn{5}{|c|}{{Продължава на следващата страница}} \\ \hline
+    \endfoot
+    
+    \hline \hline
+    \endlastfoot
+    \hline
+    2                   & 0m0.228s          & 0m0.036s          & {\color[HTML]{FF0000} -0.0032m} & {\color[HTML]{FF0000} -84.21\%} \\ \hline
+    4                   & 0m0.224s          & 0m0.024s          & {\color[HTML]{FF0000} -0.0033m} & {\color[HTML]{FF0000} -89.29\%} \\ \hline
+    8                   & 0m0.236s          & 0m0.024s          & {\color[HTML]{FF0000} -0.0035m} & {\color[HTML]{FF0000} -89.83\%} \\ \hline
+    16                  & 0m0.226s          & 0m0.029s          & {\color[HTML]{FF0000} -0.0033m} & {\color[HTML]{FF0000} -87.17\%} \\ \hline
+    32                  & 0m0.224s          & 0m0.024s          & {\color[HTML]{FF0000} -0.0033m} & {\color[HTML]{FF0000} -89.29\%} \\ \hline
+    64                  & 0m0.226s          & 0m0.024s          & {\color[HTML]{FF0000} -0.0034m} & {\color[HTML]{FF0000} -89.38\%} \\ \hline
+    128                 & 0m0.225s          & 0m0.024s          & {\color[HTML]{FF0000} -0.0034m} & {\color[HTML]{FF0000} -89.33\%} \\ \hline
+    256                 & 0m0.227s          & 0m0.024s          & {\color[HTML]{FF0000} -0.0034m} & {\color[HTML]{FF0000} -89.43\%} \\ \hline
+    512                 & 0m0.225s          & 0m0.025s          & {\color[HTML]{FF0000} -0.0033m} & {\color[HTML]{FF0000} -88.89\%} \\ \hline
+    1024                & 0m0.226s          & 0m0.024s          & {\color[HTML]{FF0000} -0.0034m} & {\color[HTML]{FF0000} -89.38\%} \\ \hline
+    2048                & 0m0.226s          & 0m0.025s          & {\color[HTML]{FF0000} -0.0034m} & {\color[HTML]{FF0000} -88.94\%} \\ \hline
+    4096                & 0m0.224s          & 0m0.028s          & {\color[HTML]{FF0000} -0.0033m} & {\color[HTML]{FF0000} -87.50\%} \\ \hline
+    8192                & 0m0.227s          & 0m0.025s          & {\color[HTML]{FF0000} -0.0034m} & {\color[HTML]{FF0000} -88.99\%} \\ \hline
+    16384               & 0m0.227s          & 0m0.029s          & {\color[HTML]{FF0000} -0.0033m} & {\color[HTML]{FF0000} -87.22\%} \\ \hline
+    32768               & 0m0.224s          & 0m0.028s          & {\color[HTML]{FF0000} -0.0033m} & {\color[HTML]{FF0000} -87.50\%} \\ \hline
+    65536               & 0m0.236s          & 0m0.032s          & {\color[HTML]{FF0000} -0.0034m} & {\color[HTML]{FF0000} -86.44\%} \\ \hline
+    131072              & 0m0.227s          & 0m0.042s          & {\color[HTML]{FF0000} -0.0031m} & {\color[HTML]{FF0000} -81.50\%} \\ \hline
+    262144              & 0m0.230s          & 0m0.053s          & {\color[HTML]{FF0000} -0.0030m} & {\color[HTML]{FF0000} -76.96\%} \\ \hline
+    524288              & 0m0.249s          & 0m0.081s          & {\color[HTML]{FF0000} -0.0028m} & {\color[HTML]{FF0000} -67.47\%} \\ \hline
+    1048576             & 0m0.250s          & 0m0.135s          & {\color[HTML]{FF0000} -0.0019m} & {\color[HTML]{FF0000} -46.00\%} \\ \hline
+    2097152             & 0m0.262s          & 0m0.223s          & {\color[HTML]{FF0000} -0.0007m} & {\color[HTML]{FF0000} -14.89\%} \\ \hline
+    4194304             & 0m0.288s          & 0m0.422s          & {\color[HTML]{32CB00} 0.0022m}  & {\color[HTML]{32CB00} 46.53\%}  \\ \hline
+    8388608             & 0m0.351s          & 0m0.792s          & {\color[HTML]{32CB00} 0.0074m}  & {\color[HTML]{32CB00} 125.64\%} \\ \hline
+    16777216            & 0m0.455s          & 0m1.573s          & {\color[HTML]{32CB00} 0.0186m}  & {\color[HTML]{32CB00} 245.71\%} \\ \hline
+    33554432            & 0m0.693s          & 0m3.361s          & {\color[HTML]{32CB00} 0.0445m}  & {\color[HTML]{32CB00} 384.99\%} \\ \hline
+    67108864            & 0m1.139s          & 0m6.472s          & {\color[HTML]{32CB00} 0.0889m}  & {\color[HTML]{32CB00} 468.22\%} \\ \hline
+    134217728           & 0m2.056s          & 0m12.895s         & {\color[HTML]{32CB00} 0.1807m}  & {\color[HTML]{32CB00} 527.19\%} \\ \hline
+    268435456           & 0m3.888s          & 0m24.948s         & {\color[HTML]{32CB00} 0.3510m}  & {\color[HTML]{32CB00} 541.67\%} \\ \hline
+    536870912           & 0m7.481s          & 0m49.342s         & {\color[HTML]{32CB00} 0.6977m}  & {\color[HTML]{32CB00} 559.56\%} \\ \hline
+    1073741824          & 0m14.729s         & 1m39.670s         & {\color[HTML]{32CB00} 1.4157m}  & {\color[HTML]{32CB00} 576.69\%} \\ \hline
+    \multicolumn{3}{|r|}{Най-голямото изоставане на WebFrame++} & {\color[HTML]{FF0000} -0.0035m} & {\color[HTML]{FF0000} -89.83\%} \\ \hline
+    \multicolumn{3}{|r|}{Най-голeят аванс на WebFrame++}        & {\color[HTML]{32CB00} 1.4157m}  & {\color[HTML]{32CB00} 576.69\%} \\ \hline
+    \multicolumn{3}{|r|}{Най-малкото изоставане на WebFrame++}  & {\color[HTML]{FF0000} -0.0007m} & {\color[HTML]{FF0000} -14.89\%} \\ \hline
+    \multicolumn{3}{|r|}{Най-малкия аванс на WebFrame++}        & {\color[HTML]{32CB00} 0.0022m}  & {\color[HTML]{32CB00} 46.53\%}  \\ \hline
+    
+    \end{longtable}
+    
+\subsection{Извод}
+    \begin{text} \par
+        WebFrame++\cite{webframe} надминава в пъти Flask, но спрямо Express при „по-леките“ (като брой и необходима процесорна мощ) операции изостава във времето. 
+    \end{text}
+    \begin{text} \par
+        В сравнението между WebFrame++\cite{webframe} и Express лесно се забелязва, че най-бавната операциия в библиотеката и свързването с клента, което в момента не е оптимизирано напълно. Това означава, че в бъдеще с подобрения върху тази част от библиотеката, тя може да подобри представянето, дори на Node.JS. 
+    \end{text}
+    \begin{text} \par
+        В момента WebFrame++\cite{webframe} е една от най-бързите библиотеки за работа с големи данни, които позволяват работа със сървър. Това е очевидно от горепоказаните тестове и в пъти по-добрите резултати на библиотеката спрямо световните лидери. 
+    \end{text}
+
+\end{document}

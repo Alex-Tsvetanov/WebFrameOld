@@ -1,0 +1,140 @@
+\PassOptionsToPackage{svgnames}{xcolor}
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[bulgarian]{babel}
+\usepackage{hyperref}
+\usepackage{subfiles}
+\usepackage{svg}
+\usepackage{amsmath}
+\usepackage[final]{pdfpages}
+\usepackage[table,xcdraw]{xcolor}
+
+\usepackage{longtable}
+\usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+\makeatletter
+\def\BState{\State\hskip-\ALG@thistlm}
+\makeatother
+\hypersetup{
+	colorlinks,
+	linkcolor={black},
+	citecolor={black},
+	urlcolor={black}
+}
+\usepackage{lmodern}
+%\usepackage{geometry}
+%\usepackage{layout}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+
+\title{WebFrame++}
+\author{Алекс Цветанов}
+
+\newcommand{\titleGP}{\begingroup
+	\centering
+	%\vspace{\baselineskip}
+	%\begin{wrapfigure}{r}{\textwidth}
+    %\end{wrapfigure}
+		\includegraphics[width=\textwidth]{images/logo.png}
+    \\\vspace{0.1cm}
+	\rule{\textwidth}{1.6pt}\vspace{-\baselineskip}\vspace{2pt}
+	\rule{\textwidth}{0.4pt}\\[\baselineskip]
+	
+	{\LARGE WebFrame++ \\ \small{C++ web application framework}}\\[0.2\baselineskip]
+	
+	\rule{\textwidth}{0.4pt}\vspace{-\baselineskip}\vspace{3.2pt}
+	\rule{\textwidth}{1.6pt}\\[\baselineskip]
+    \includegraphics[width=0.35\textwidth]{images/webpp-logo.png}
+
+	\vspace{20pt}
+	{
+	{\LARGE Алекс Цветанов}\\
+    {\normalsize Софийска Математическа Гимназия, София, България}
+	\par}
+	
+	\vspace{2\baselineskip}
+	
+	\vfill
+	
+	{\scshape Ученическия институт по математика и информатика на БАН, 2020} \\[0.3\baselineskip]
+	{\large Боровец, България}\par
+	
+	\endgroup}
+
+
+\usepackage{tcolorbox}
+\newenvironment{myblock}[1]{%
+	\tcolorbox[beamer,%
+	noparskip,breakable,
+	colback=LightGreen,colframe=DarkGreen,%
+	colbacklower=LimeGreen!75!LightGreen,%
+	title=#1]}%
+{\endtcolorbox}
+\newenvironment{myblocksecond}[1]{%
+	\tcolorbox[beamer,%
+	noparskip,breakable,
+	colback=Yellow,colframe=Brown,%
+	colbacklower=Brown!75!Yellow,%
+	title=#1]}%
+{\endtcolorbox}
+
+\begin{document}
+	
+	\titleGP
+	\newpage
+	
+	\tableofcontents
+	\newpage
+	
+	\begin{abstract}
+    \begin{text}
+    \par
+    WebFrame++ е съвременна библиотека, която цели да направи един от най-бързите програмни езици (C++) удобен за разработка на интернет приложения.\par
+    Разработката предоставя удобен синтаксис за създаване на уеб сървър, задаване на пътища и тяхното съдържание по начин, наподобяваш този на повечето използвани в момента библиотеки и модули със същата цел, но за други езици.\par
+    Примери за такива са Express.JS за Node.JS, Flask и Django за Python, дори Spring framework за Java.\par
+    \vspace{1cm}
+    WebFrame++ is a modern library that aims to make
+one of the fastest programming languages (C ++) efficient for web applications. \par
+The library provides a convenient syntax for creating a web server, setting up paths and the content in a way similar to most currently used libraries and
+modules for the same purpose but for other languages.\par
+Examples of these are Express.JS for Node.JS, Flask and Django for
+Python and even Spring framework for Java.\par
+
+
+
+    \end{text}
+	\end{abstract}
+	\newpage
+	
+	\section{Въведение}
+	    \subfile{chapters/introduction}
+	\section{Проблем}
+	    \subfile{chapters/problem}
+	\section{Решение}
+	    \subfile{chapters/solution}
+	\section{Сравнение} \label{compare}
+	    \subfile{chapters/compare}
+	\section{Технологии}
+	    \subfile{chapters/techniques}
+	\section{Бъдеща разработка и разпространение}
+	    \subfile{chapters/future}
+	\section{Благодарности}
+    	Благодарности за помощта за оформянето на документацията:
+    	\begin{itemize}
+    		\item Надежда Цачева
+    		\item Радостина Богословова
+    	\end{itemize}
+    	Благодаря още на:
+    	\begin{itemize}
+    		\item Ученическия институт на БАН
+    		\item Българска академия на науките
+    	\end{itemize}
+
+    \bibliographystyle{plain}
+    \bibliography{ref}
+	
+\end{document}

@@ -88,9 +88,10 @@ namespace webnetpp
 			{
 				return vars[ind];
 			}
-			void operator += (const var& v)
+			path_vars& operator += (const var& v)
 			{
 				vars.push_back (v);
+				return *this;
 			}
 	};
  
@@ -101,14 +102,8 @@ namespace webnetpp
 		{"400", "Bad Request"}, {"401", "Unauthorized"}, {"402", "Payment Required"}, {"403", "Forbidden"}, {"404", "Not Found"}, {"405", "Method Not Allowed"}, {"406", "Not Acceptable"}, {"407", "Proxy Authentication Required"}, {"408", "Request Time-out"}, {"409", "Conflict"}, {"410", "Gone"}, {"411", "Length Required"}, {"412", "Precondition Failed"}, {"413", "Request Entity Too Large"}, {"414", "Request-URI Too Large"}, {"415", "Unsupported Media Type"}, {"416", "Requested range not satisfiable"}, {"417", "Expectation Failed"},
 		{"500", "Internal Server Error"}, {"501", "Not Implemented"}, {"502", "Bad Gateway"}, {"503", "Service Unavailable"}, {"504", "Gateway Time-out"}, {"505", "HTTP Version not supported"}
 	};
-	const std::map < std::string, std::pair < std::string, std::string > > type 
-	{ 
-		{"html", 
-			{"Content-Type", "text/html; charset=utf-8"}
-		}, 
-		{"cpp", 
-			{"Content-Type", "text/cpp; charset=utf-8"} 
-		}
+	const std::map < std::string, std::string > mime_types = { 
+		#include <webnetpp/mime.hpp>
 	};
 
 	struct status_line

@@ -71,7 +71,6 @@ namespace webnetpp
 							std::regex >,                              // regex 
 				responcer,
 				cmp> routes;
-			std::set < fs::path > static_folders;
 
 			static std::pair < std::vector < std::string >, // var type
 							std::regex >                // regex 
@@ -97,11 +96,24 @@ namespace webnetpp
 						}
 						v.push_back (var_type);
 						format += "(";
+						std::string curr_val_regex;
 						for (i ++ ; i < str.size () and str [i] != '}' ; i ++)
 						{
 							if (str [i] == ':') break;
-							format += str [i];
+							curr_val_regex += str [i];
 						}
+						if (curr_val_regex == "string" or curr_val_regex == "text")
+							curr_val_regex = "[A-Za-z_%0-9.]+";
+						if (curr_val_regex == "char" or curr_val_regex == "symbol")
+							curr_val_regex = "[A-Za-z_%0-9.]";
+						if (curr_val_regex == "digit")
+							curr_val_regex = "[0-9]";
+						if (curr_val_regex == "number")
+							curr_val_regex = "[1-9][0-9]*";
+						if (curr_val_regex == "path")
+							curr_val_regex = "[A-Za-z_/%0-9.]+";
+						std::cout << curr_val_regex << std::endl;
+						format += curr_val_regex;
 						format += ")";
 					}
 					else 
@@ -117,6 +129,8 @@ namespace webnetpp
 			SynchronizedFile errors;
 			SynchronizedFile performancer;
 			jinja2::Template tpl;
+
+			std::map<std::string, responcer> responses;
 		public:
 
 			webnetpp ()
@@ -124,6 +138,21 @@ namespace webnetpp
 				performancer = SynchronizedFile(std::clog);
 				logger = SynchronizedFile(std::clog);
 				errors = SynchronizedFile(std::cout);
+			}
+
+			template<typename F>
+			webnetpp& handle(std::string code, F _res)
+			{
+				const auto res = wrap(_res);
+				responses [code] = responcer(res);
+				return *this;
+			}
+
+			template<typename Ret, typename... Ts>
+			webnetpp& handle(std::string code, std::function<Ret(Ts...)> const& res)
+			{
+				responses [code] = responcer(res);
+				return *this;
 			}
 
 			auto get_routes () const 
@@ -149,11 +178,33 @@ namespace webnetpp
 				return *this;
 			}
 
-			webnetpp& set_static (std::string path)
+			webnetpp& set_static (std::string path, std::string alias)
 			{
 				fs::path p = fs::relative (path);
-				static_folders.insert (p);
+				this->route(alias + "/{path}", [&path, this](std::string file) {
+					return this->get_file(path + "/" + file);
+				});
 				return *this;
+			}
+
+			response get_file(std::string path) const
+			{
+				std::string ext = fs::path(path).extension();
+				const std::string mime = mime_types.at(ext);
+				std::ifstream ifs(path);
+				if (not ifs.is_open ())
+				{
+					path_vars p;
+					p += path_vars::var(path, "string");
+					return this->responses.at("404").call(p);
+				}
+				else
+				{
+					std::string content( (std::istreambuf_iterator<char>(ifs) ),
+										(std::istreambuf_iterator<char>()    ) );
+					std::map < std::string, std::string > m = { {"Content-type", mime + "; charset=utf-8"} };
+					return response (status_line ("1.1", "200"), m, content);
+				}
 			}
 
 			response render(std::string path, jinja2::ValuesMap params = {})
@@ -208,7 +259,9 @@ namespace webnetpp
 						}
 					}
 				}
-				return response (status_line ("1.1", "404"));
+				path_vars p;
+				p += path_vars::var(path, "string");
+				return responses.at("404").call(p);
 			}
 			
 			response respond (const request& req)
@@ -338,7 +391,15 @@ namespace webnetpp
 					// this->logger << "================= PARSING-BUFFER ===============\n";
 					// this->logger << r.to_string () << "\n";
 					// this->logger << "--------- PARSED ------------\n"; 
-					res = this->respond (r);
+						
+					try
+					{
+						res = this->respond (r);
+					}
+					catch(std::exception &e)
+					{
+						res = responses.at("500").call(path_vars() += {std::string(e.what()), "string"});
+					}
 					res.set_http (r.http);
 					std::string s = res.to_string ();
 					send (new_socket, s.c_str (), s.size (), 0);
