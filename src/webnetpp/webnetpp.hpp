@@ -128,6 +128,7 @@ namespace webnetpp
 			SynchronizedFile logger;
 			SynchronizedFile errors;
 			SynchronizedFile performancer;
+			std::string template_dir;
 			jinja2::Template tpl;
 
 			std::map<std::string, responcer> responses;
@@ -138,6 +139,7 @@ namespace webnetpp
 				performancer = SynchronizedFile(std::clog);
 				logger = SynchronizedFile(std::clog);
 				errors = SynchronizedFile(std::cout);
+				template_dir = ".";
 			}
 
 			template<typename F>
@@ -187,6 +189,12 @@ namespace webnetpp
 				return *this;
 			}
 
+			webnetpp& set_templates (std::string path)
+			{
+				this->template_dir = path;
+				return *this;
+			}
+
 			response get_file(std::string path) const
 			{
 				std::string ext = fs::path(path).extension();
@@ -209,9 +217,16 @@ namespace webnetpp
 
 			response render(std::string path, jinja2::ValuesMap params = {})
 			{
-				this->tpl.LoadFromFile(path);
-
-				return response (tpl.RenderAsString(params).value());
+				path = this->template_dir + "/" + path;
+				std::string response_str;
+				try {
+					this->tpl.LoadFromFile(path);
+					response_str = std::move(tpl.RenderAsString(params).value());
+				}
+				catch (...) { // file not found
+					return this->responses.at("404").call(path_vars() += path_vars::var(path, "string"));
+				}
+				return response (response_str);
 			}
 
 			template<typename Ret, typename... Ts>

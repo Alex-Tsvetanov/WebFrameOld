@@ -7,15 +7,16 @@ int main ()
 {
 	int pass = 0;
 	webnetpp::webnetpp app;
-	app.set_static("./src/static", "/static")
+	app .set_static("./src/static", "/static")
+	 	.set_templates("./src/static/templates")
 		.handle("404", [&](std::string path) {
 			return "Error 404: " + path + " was not found.";
 		})
 		.handle("500", [&](std::string reason) {
-			return "Error 503: Internal server error: " + reason + ".";
+			return "Error 500: Internal server error: " + reason + ".";
 		})
 		.route ("/{text}", [&](std::string user) {
-				return app.render("./templates/template.html", {{"username", user}});
+				return app.render("template.html", {{"username", user}});
 			}
 		)
 		.route ("/{number}", [&](int steps) {
